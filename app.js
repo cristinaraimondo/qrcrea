@@ -190,7 +190,7 @@ logoutBtn.addEventListener("click", async () => {
 
 actualizarSesion();
 const myQrs = document.getElementById("myQrs");
-
+//CARGAR MIS QR
 async function cargarMisQR() {
   const {
     data: { user }
@@ -222,13 +222,39 @@ async function cargarMisQR() {
   data.forEach((qr) => {
     const item = document.createElement("div");
 
-    item.innerHTML = `
-      <strong>${qr.name}</strong>
-      <p>${qr.destination_url}</p>
-    `;
+   item.innerHTML = `
+  <strong>${qr.name}</strong>
+  <p>${qr.destination_url}</p>
+  <button class="deleteQrBtn" data-id="${qr.id}">
+    Eliminar
+  </button>
+`;
 
     myQrs.appendChild(item);
   });
 }
 
 cargarMisQR();
+document.addEventListener("click", async (e) => {
+  if (!e.target.classList.contains("deleteQrBtn")) return;
+
+  const id = e.target.dataset.id;
+
+  const confirmar = confirm("¿Seguro que querés eliminar este QR?");
+
+  if (!confirmar) return;
+
+  const { error } = await supabaseClient
+    .from("qr_codes")
+    .delete()
+    .eq("id", id);
+
+  if (error) {
+    console.error("Error al eliminar QR:", error);
+    alert("No se pudo eliminar el QR.");
+    return;
+  }
+
+  await cargarMisQR();
+  alert("✅ QR eliminado.");
+});
