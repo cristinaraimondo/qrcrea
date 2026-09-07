@@ -74,9 +74,9 @@ if (archivo) {
 }
 
   qrContainer.innerHTML = "";
-  
+
    const slug = crypto.randomUUID();
-  const urlPublica = `${window.location.origin}/q.html?slug=${slug}`;
+ const urlPublica = new URL(`q.html?slug=${slug}`, window.location.href).href;
 
  new QRCode(qrContainer, {
   text: urlPublica,
