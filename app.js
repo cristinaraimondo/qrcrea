@@ -222,9 +222,13 @@ async function cargarMisQR() {
   data.forEach((qr) => {
     const item = document.createElement("div");
 
+const urlQr = new URL(`q.html?slug=${qr.slug}`, window.location.href).href;
+
 item.innerHTML = `
   <strong>${qr.name}</strong>
   <p>${qr.destination_url}</p>
+
+  <div class="savedQr"></div>
 
   <button class="editQrBtn"
     data-id="${qr.id}"
@@ -237,9 +241,17 @@ item.innerHTML = `
   </button>
 `;
 
-    myQrs.appendChild(item);
-  });
-}
+myQrs.appendChild(item);
+
+const qrGuardado = item.querySelector(".savedQr");
+
+new QRCode(qrGuardado, {
+  text: urlQr,
+  width: 160,
+  height: 160
+});
+
+
 
 cargarMisQR();
 document.addEventListener("click", async (e) => {
