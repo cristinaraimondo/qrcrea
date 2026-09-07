@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QRcrea</title>
+ <script>
+  const params = new URLSearchParams(window.location.search);
+  const slug = params.get("slug");
+
+  if (!slug) {
+    document.getElementById("message").textContent = "QR inválido.";
+  } else {
+    const functionUrl = "https://srottoudvavudcujvzeb.supabase.co/functions/v1/resolve-qr";
+
+    window.location.href = `${functionUrl}?slug=${encodeURIComponent(slug)}`;
+  }
+</script>
+  <style>
+   
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      color: #111827;
+    }
+
+    .box {
+      text-align: center;
+      background: white;
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="box">
+    <h1>QRcrea</h1>
+    <p id="message">Abriendo contenido...</p>
+  </div>
+
+</body>
+</html>

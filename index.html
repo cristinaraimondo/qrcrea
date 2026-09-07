@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QRcrea</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <header>
+    <h1>QRcrea</h1>
+    <p>Generá códigos QR para enlaces, imágenes, audio y PDF.</p>
+  </header>
+
+  <main>
+    <section class="card">
+  <h2>Crear cuenta</h2>
+
+  <input
+    type="email"
+    id="registerEmail"
+    placeholder="Tu correo electrónico"
+  >
+
+  <input
+    type="password"
+    id="registerPassword"
+    placeholder="Tu contraseña"
+  >
+
+  <button id="registerBtn">
+    Crear cuenta
+  </button>
+
+  <p id="registerMessage"></p>
+</section>
+<section class="card">
+  <h2>Iniciar sesión</h2>
+
+  <input
+    type="email"
+    id="loginEmail"
+    placeholder="Tu correo electrónico"
+  >
+
+  <input
+    type="password"
+    id="loginPassword"
+    placeholder="Tu contraseña"
+  >
+
+  <button id="loginBtn">
+    Iniciar sesión
+  </button>
+
+  <p id="loginMessage"></p>
+  <button id="logoutBtn" style="display:none;">
+  Cerrar sesión
+</button>
+</section>
+    <section class="card">
+      <h2>Crear código QR</h2>
+      <input
+  type="text"
+  id="qrName"
+  placeholder="Nombre del QR (ej: Mi página web)"
+>
+
+      <input
+        type="text"
+        id="qrText"
+        placeholder="Pegá un enlace o escribí un texto"
+      >
+      <input
+  type="file"
+  id="qrFile"
+  accept="image/*,audio/*,application/pdf"
+>
+
+      <button id="generateBtn">
+        Generar QR
+      </button>
+
+      <div id="qrcode"></div>
+    </section>
+    <section class="card">
+  <h2>Mis QR</h2>
+
+  <div id="myQrs">
+    <p>Todavía no cargamos tus códigos.</p>
+  </div>
+</section>
+  </main>
+
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="app.js"></script>
+
+</body>
+</html>
