@@ -252,6 +252,8 @@ new QRCode(qrGuardado, {
 });
 
 
+  });
+}
 
 cargarMisQR();
 document.addEventListener("click", async (e) => {
