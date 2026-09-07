@@ -222,9 +222,16 @@ async function cargarMisQR() {
   data.forEach((qr) => {
     const item = document.createElement("div");
 
-   item.innerHTML = `
+item.innerHTML = `
   <strong>${qr.name}</strong>
   <p>${qr.destination_url}</p>
+
+  <button class="editQrBtn"
+    data-id="${qr.id}"
+    data-url="${qr.destination_url}">
+    Editar destino
+  </button>
+
   <button class="deleteQrBtn" data-id="${qr.id}">
     Eliminar
   </button>
@@ -257,4 +264,30 @@ document.addEventListener("click", async (e) => {
 
   await cargarMisQR();
   alert("✅ QR eliminado.");
+});
+document.addEventListener("click", async (e) => {
+  if (!e.target.classList.contains("editQrBtn")) return;
+
+  const id = e.target.dataset.id;
+  const urlActual = e.target.dataset.url;
+
+  const nuevaUrl = prompt("Ingresá el nuevo destino del QR:", urlActual);
+
+  if (!nuevaUrl) return;
+
+  const { error } = await supabaseClient
+    .from("qr_codes")
+    .update({
+      destination_url: nuevaUrl.trim()
+    })
+    .eq("id", id);
+
+  if (error) {
+    console.error("Error al editar QR:", error);
+    alert("No se pudo actualizar el QR.");
+    return;
+  }
+
+  await cargarMisQR();
+  alert("✅ Destino actualizado correctamente.");
 });
