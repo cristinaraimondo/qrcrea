@@ -279,29 +279,121 @@ document.addEventListener("click", async (e) => {
   await cargarMisQR();
   alert("✅ QR eliminado.");
 });
-document.addEventListener("click", async (e) => {
+let qrEditandoId = null;
+
+const editPanel = document.getElementById("editPanel");
+const editType = document.getElementById("editType");
+const editUrl = document.getElementById("editUrl");
+const editFile = document.getElementById("editFile");
+const saveEditBtn = document.getElementById("saveEditBtn");
+const cancelEditBtn = document.getElementById("cancelEditBtn");
+
+document.addEventListener("click", (e) => {
   if (!e.target.classList.contains("editQrBtn")) return;
 
-  const id = e.target.dataset.id;
-  const urlActual = e.target.dataset.url;
+  qrEditandoId = e.target.dataset.id;
 
-  const nuevaUrl = prompt("Ingresá el nuevo destino del QR:", urlActual);
+  editUrl.value = e.target.dataset.url || "";
+  editType.value = "url";
+  editPanel.style.display = "block";
+});
 
-  if (!nuevaUrl) return;
+cancelEditBtn.addEventListener("click", () => {
+  qrEditandoId = null;
+  editPanel.style.display = "none";
+  editUrl.value = "";
+  editFile.value = "";
+});
+saveEditBtn.addEventListener("click", async () => {
+  if (!qrEditandoId) return;
+
+  const {
+    data: { user }
+  } = await supabaseClient.auth.getUser();
+
+  if (!user) {
+    alert("Tenés que iniciar sesión.");
+    return;
+  }
+
+  let nuevoDestino = "";
+  let nuevoTipo = "";
+
+  if (editType.value === "url") {
+    nuevoDestino = editUrl.value.trim();
+
+    if (!nuevoDestino) {
+      alert("Ingresá una URL.");
+      return;
+    }
+
+    nuevoTipo = "url";
+  } else {
+    const archivo = editFile.files[0];
+
+    if (!archivo) {
+      alert("Seleccioná un archivo.");
+      return;
+    }
+
+    const nombreSeguro = `${Date.now()}-${archivo.name}`;
+    const rutaArchivo = `${user.id}/${nombreSeguro}`;
+
+    const { error: uploadError } = await supabaseClient.storage
+      .from("user-files")
+      .upload(rutaArchivo, archivo);
+
+    if (uploadError) {
+      console.error("Error al subir archivo:", uploadError);
+      alert("No se pudo subir el archivo.");
+      return;
+    }
+
+    nuevoDestino = rutaArchivo;
+
+    if (archivo.type.startsWith("image/")) {
+      nuevoTipo = "image";
+    } else if (archivo.type.startsWith("audio/")) {
+      nuevoTipo = "audio";
+    } else if (archivo.type === "application/pdf") {
+      nuevoTipo = "pdf";
+    } else {
+      nuevoTipo = "file";
+    }
+  }
 
   const { error } = await supabaseClient
     .from("qr_codes")
     .update({
-      destination_url: nuevaUrl.trim()
+      destination_url: nuevoDestino,
+      type: nuevoTipo
     })
-    .eq("id", id);
+    .eq("id", qrEditandoId);
 
   if (error) {
-    console.error("Error al editar QR:", error);
+    console.error("Error al actualizar QR:", error);
     alert("No se pudo actualizar el QR.");
     return;
   }
 
+  editPanel.style.display = "none";
+  editUrl.value = "";
+  editFile.value = "";
+  qrEditandoId = null;
+
   await cargarMisQR();
+
   alert("✅ Destino actualizado correctamente.");
 });
+function actualizarEditorTipo() {
+  if (editType.value === "url") {
+    editUrl.style.display = "block";
+    editFile.style.display = "none";
+  } else {
+    editUrl.style.display = "none";
+    editFile.style.display = "block";
+  }
+}
+
+editType.addEventListener("change", actualizarEditorTipo);
+actualizarEditorTipo();
