@@ -319,48 +319,44 @@ saveEditBtn.addEventListener("click", async () => {
   let nuevoDestino = "";
   let nuevoTipo = "";
 
-  if (editType.value === "url") {
-    nuevoDestino = editUrl.value.trim();
+const archivo = editFile.files[0];
 
-    if (!nuevoDestino) {
-      alert("Ingresá una URL.");
-      return;
-    }
+if (archivo) {
+  const nombreSeguro = `${Date.now()}-${archivo.name}`;
+  const rutaArchivo = `${user.id}/${nombreSeguro}`;
 
-    nuevoTipo = "url";
-  } else {
-    const archivo = editFile.files[0];
+  const { error: uploadError } = await supabaseClient.storage
+    .from("user-files")
+    .upload(rutaArchivo, archivo);
 
-    if (!archivo) {
-      alert("Seleccioná un archivo.");
-      return;
-    }
-
-    const nombreSeguro = `${Date.now()}-${archivo.name}`;
-    const rutaArchivo = `${user.id}/${nombreSeguro}`;
-
-    const { error: uploadError } = await supabaseClient.storage
-      .from("user-files")
-      .upload(rutaArchivo, archivo);
-
-    if (uploadError) {
-      console.error("Error al subir archivo:", uploadError);
-      alert("No se pudo subir el archivo.");
-      return;
-    }
-
-    nuevoDestino = rutaArchivo;
-
-    if (archivo.type.startsWith("image/")) {
-      nuevoTipo = "image";
-    } else if (archivo.type.startsWith("audio/")) {
-      nuevoTipo = "audio";
-    } else if (archivo.type === "application/pdf") {
-      nuevoTipo = "pdf";
-    } else {
-      nuevoTipo = "file";
-    }
+  if (uploadError) {
+    console.error("Error al subir archivo:", uploadError);
+    alert("No se pudo subir el archivo.");
+    return;
   }
+
+  nuevoDestino = rutaArchivo;
+
+  if (archivo.type.startsWith("image/")) {
+    nuevoTipo = "image";
+  } else if (archivo.type.startsWith("audio/")) {
+    nuevoTipo = "audio";
+  } else if (archivo.type === "application/pdf") {
+    nuevoTipo = "pdf";
+  } else {
+    nuevoTipo = "file";
+  }
+
+} else {
+  nuevoDestino = editUrl.value.trim();
+
+  if (!nuevoDestino) {
+    alert("Ingresá una URL o seleccioná un archivo.");
+    return;
+  }
+
+  nuevoTipo = "url";
+}
 
   const { error } = await supabaseClient
     .from("qr_codes")
