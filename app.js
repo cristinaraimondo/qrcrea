@@ -22,6 +22,82 @@ probarConexion();
 const generateBtn = document.getElementById("generateBtn");
 const qrText = document.getElementById("qrText");
 const qrContainer = document.getElementById("qrcode");
+const qrTypeBtns = document.querySelectorAll(".qrTypeBtn");
+const qrFileInput = document.getElementById("qrFile");
+const qrSearch = document.getElementById("qrSearch");
+const qrCount = document.getElementById("qrCount");
+
+
+
+qrSearch.addEventListener("input", () => {
+  const busqueda = qrSearch.value.toLowerCase().trim();
+
+  const tarjetas = document.querySelectorAll(".qrItem");
+
+  let visibles = 0;
+
+  tarjetas.forEach((tarjeta) => {
+    const nombre = (tarjeta.dataset.name || "").toLowerCase();
+
+    if (nombre.includes(busqueda)) {
+      tarjeta.style.display = "block";
+      visibles++;
+    } else {
+      tarjeta.style.display = "none";
+    }
+  });
+
+  if (busqueda) {
+    qrCount.textContent = `${visibles} de ${tarjetas.length} códigos`;
+  } else {
+    qrCount.textContent = `${tarjetas.length} ${tarjetas.length === 1 ? "código guardado" : "códigos guardados"}`;
+  }
+});
+let selectedQrType = "url";
+
+  function actualizarTipoQr() {
+  if (selectedQrType === "url") {
+    qrText.style.display = "block";
+    qrFileInput.style.display = "none";
+    qrText.placeholder = "https://tusitio.com";
+  } else {
+    qrText.style.display = "none";
+    qrFileInput.style.display = "block";
+
+    if (selectedQrType === "image") {
+      qrFileInput.title = "Seleccioná una imagen";
+       qrFileInput.setAttribute("aria-label", "Seleccioná una imagen");
+    } else if (selectedQrType === "pdf") {
+      qrFileInput.title = "Seleccioná un archivo PDF";
+       qrFileInput.setAttribute("aria-label", "Seleccioná un archivo PDF");
+    } else if (selectedQrType === "audio") {
+      qrFileInput.title = "Seleccioná un archivo de audio";
+      qrFileInput.setAttribute("aria-label", "Seleccioná un archivo de audio");
+    }
+  }
+}
+
+
+qrTypeBtns.forEach((btn) => {
+  btn.addEventListener("click", () => {
+    selectedQrType = btn.dataset.type;
+    qrFileInput.value = "";
+    if (selectedQrType === "image") {
+  qrFileInput.accept = "image/*";
+} else if (selectedQrType === "pdf") {
+  qrFileInput.accept = "application/pdf";
+} else if (selectedQrType === "audio") {
+  qrFileInput.accept = "audio/*";
+}
+
+    qrTypeBtns.forEach((b) => b.classList.remove("active"));
+    btn.classList.add("active");
+
+    actualizarTipoQr();
+  });
+});
+
+actualizarTipoQr();
 
 generateBtn.addEventListener("click", async () => {
 
@@ -30,8 +106,18 @@ generateBtn.addEventListener("click", async () => {
   const qrFile = document.getElementById("qrFile");
 const archivo = qrFile.files[0];
 
- if (!qrName || (!contenido && !archivo)) {
-  alert("Completá el nombre y agregá un enlace/texto o un archivo.");
+if (!qrName) {
+  alert("Completá el nombre del QR.");
+  return;
+}
+
+if (selectedQrType === "url" && !contenido) {
+  alert("Ingresá un enlace.");
+  return;
+}
+
+if (selectedQrType !== "url" && !archivo) {
+  alert("Seleccioná el archivo correspondiente.");
   return;
 }
 
@@ -167,18 +253,32 @@ loginBtn.addEventListener("click", async () => {
   console.log("Usuario conectado:", data.user);
 });
 const logoutBtn = document.getElementById("logoutBtn");
+const registerCard = document.getElementById("registerCard");
+const loginCard = document.getElementById("loginCard");
+const headerLogoutBtn = document.getElementById("headerLogoutBtn");
+
 
 async function actualizarSesion() {
+  
   const {
     data: { user }
   } = await supabaseClient.auth.getUser();
 
   if (user) {
-    logoutBtn.style.display = "block";
-    loginMessage.textContent = `✅ Sesión iniciada como ${user.email}`;
-  } else {
-    logoutBtn.style.display = "none";
-  }
+  logoutBtn.style.display = "block";
+  headerLogoutBtn.style.display = "block";
+  loginMessage.textContent = `✅ Sesión iniciada como ${user.email}`;
+
+  registerCard.style.display = "none";
+  loginCard.style.display = "none";
+
+} else {
+  logoutBtn.style.display = "none";
+  headerLogoutBtn.style.display = "none";
+
+  registerCard.style.display = "block";
+  loginCard.style.display = "block";
+}
 }
 
 logoutBtn.addEventListener("click", async () => {
@@ -186,6 +286,14 @@ logoutBtn.addEventListener("click", async () => {
 
   loginMessage.textContent = "Sesión cerrada.";
   logoutBtn.style.display = "none";
+});
+headerLogoutBtn.addEventListener("click", async () => {
+  await supabaseClient.auth.signOut();
+
+  loginMessage.textContent = "Sesión cerrada.";
+  headerLogoutBtn.style.display = "none";
+
+  await actualizarSesion();
 });
 
 actualizarSesion();
@@ -218,29 +326,53 @@ async function cargarMisQR() {
   }
 
   myQrs.innerHTML = "";
-
+qrCount.textContent = `${data.length} ${data.length === 1 ? "código guardado" : "códigos guardados"}`;
   data.forEach((qr) => {
     const item = document.createElement("div");
 
 const urlQr = new URL(`q.html?slug=${qr.slug}`, window.location.href).href;
+item.dataset.name = qr.name;
+item.dataset.qrUrl = urlQr;
+
+const tipoTexto = {
+  url: "🔗 Enlace",
+  image: "🖼 Imagen",
+  pdf: "📄 PDF",
+  audio: "🎵 Audio",
+  file: "📁 Archivo"
+};
+
+item.className = "qrItem";
 
 item.innerHTML = `
-  <strong>${qr.name}</strong>
-  <p>${qr.destination_url}</p>
+  <div class="qrItemHeader">
+    <strong class="qrItemName">${qr.name}</strong>
+    <span class="qrItemType">${tipoTexto[qr.type] || "QR"}</span>
+  </div>
 
   <div class="savedQr"></div>
 
-  <button class="editQrBtn"
-    data-id="${qr.id}"
-    data-url="${qr.destination_url}">
-    Editar destino
-  </button>
+  <div class="qrItemActions">
+    <button class="editQrBtn"
+      data-id="${qr.id}"
+      data-url="${qr.destination_url}"
+      data-type="${qr.type}">
+      Editar destino
+    </button>
 
-  <button class="deleteQrBtn" data-id="${qr.id}">
-    Eliminar
-  </button>
+    <button class="downloadQrBtn">
+      Descargar
+    </button>
+
+  <button
+  class="deleteQrBtn"
+  data-id="${qr.id}"
+  data-type="${qr.type}"
+  data-url="${qr.destination_url}">
+  Eliminar
+</button>
+  </div>
 `;
-
 myQrs.appendChild(item);
 
 const qrGuardado = item.querySelector(".savedQr");
@@ -261,9 +393,22 @@ document.addEventListener("click", async (e) => {
 
   const id = e.target.dataset.id;
 
+const tipo = e.target.dataset.type;
+const ruta = e.target.dataset.url;
   const confirmar = confirm("¿Seguro que querés eliminar este QR?");
 
   if (!confirmar) return;
+  if (tipo !== "url" && ruta) {
+  const { error: storageError } = await supabaseClient.storage
+    .from("user-files")
+    .remove([ruta]);
+
+  if (storageError) {
+    console.error("Error al eliminar archivo:", storageError);
+    alert("No se pudo eliminar el archivo asociado.");
+    return;
+  }
+}
 
   const { error } = await supabaseClient
     .from("qr_codes")
@@ -280,6 +425,8 @@ document.addEventListener("click", async (e) => {
   alert("✅ QR eliminado.");
 });
 let qrEditandoId = null;
+let qrEditandoTipoAnterior = null;
+let qrEditandoRutaAnterior = null;
 
 const editPanel = document.getElementById("editPanel");
 const editType = document.getElementById("editType");
@@ -292,6 +439,8 @@ document.addEventListener("click", (e) => {
   if (!e.target.classList.contains("editQrBtn")) return;
 
   qrEditandoId = e.target.dataset.id;
+  qrEditandoTipoAnterior = e.target.dataset.type;
+  qrEditandoRutaAnterior = e.target.dataset.url;
 
   editUrl.value = e.target.dataset.url || "";
   editType.value = "url";
@@ -371,11 +520,27 @@ if (archivo) {
     alert("No se pudo actualizar el QR.");
     return;
   }
+  if (
+  qrEditandoTipoAnterior &&
+  qrEditandoTipoAnterior !== "url" &&
+  qrEditandoRutaAnterior &&
+  qrEditandoRutaAnterior !== nuevoDestino
+) {
+  const { error: deleteOldError } = await supabaseClient.storage
+    .from("user-files")
+    .remove([qrEditandoRutaAnterior]);
+
+  if (deleteOldError) {
+    console.error("No se pudo eliminar el archivo anterior:", deleteOldError);
+  }
+}
 
   editPanel.style.display = "none";
   editUrl.value = "";
   editFile.value = "";
   qrEditandoId = null;
+  qrEditandoTipoAnterior = null;
+  qrEditandoRutaAnterior = null;
 
   await cargarMisQR();
 
@@ -393,3 +558,48 @@ function actualizarEditorTipo() {
 
 editType.addEventListener("change", actualizarEditorTipo);
 actualizarEditorTipo();
+document.addEventListener("click", (e) => {
+  if (!e.target.classList.contains("downloadQrBtn")) return;
+
+ const item = e.target.closest(".qrItem");
+  const urlQr = item.dataset.qrUrl;
+
+  if (!urlQr) {
+    alert("No se pudo obtener la dirección del QR.");
+    return;
+  }
+
+  const qrTemporal = document.createElement("div");
+
+  new QRCode(qrTemporal, {
+    text: urlQr,
+    width: 1000,
+    height: 1000
+  });
+
+  setTimeout(() => {
+    const canvas = qrTemporal.querySelector("canvas");
+    const img = qrTemporal.querySelector("img");
+
+    let dataUrl = null;
+
+    if (canvas) {
+      dataUrl = canvas.toDataURL("image/png");
+    } else if (img) {
+      dataUrl = img.src;
+    }
+
+    if (!dataUrl) {
+      alert("No se pudo preparar el QR para descargar.");
+      return;
+    }
+
+    const nombreQr = item.dataset.name || "qrcrea-qr";
+
+    const link = document.createElement("a");
+    link.href = dataUrl;
+    link.download = `${nombreQr}.png`;
+    link.click();
+  }, 100);
+});
+ 

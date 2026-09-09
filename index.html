@@ -9,13 +9,23 @@
 
 <body>
 
-  <header>
-    <h1>QRcrea</h1>
-    <p>Generá códigos QR para enlaces, imágenes, audio y PDF.</p>
-  </header>
+  
+   <header class="mainHeader">
+  <div class="brand">
+    <div class="brandIcon">Q</div>
+
+    <div>
+      <h1>QRcrea</h1>
+      <p>Códigos QR dinámicos, simples y seguros.</p>
+    </div>
+  </div>
+  <button id="headerLogoutBtn" style="display:none;">
+  Cerrar sesión
+</button>
+</header>
 
   <main>
-    <section class="card">
+   <section class="card" id="registerCard">
   <h2>Crear cuenta</h2>
 
   <input
@@ -36,7 +46,7 @@
 
   <p id="registerMessage"></p>
 </section>
-<section class="card">
+<section class="card" id="loginCard">
   <h2>Iniciar sesión</h2>
 
   <input
@@ -62,6 +72,23 @@
 </section>
     <section class="card">
       <h2>Crear código QR</h2>
+      <div class="qrTypeSelector">
+  <button type="button" class="qrTypeBtn active" data-type="url">
+    🔗 Enlace
+  </button>
+
+  <button type="button" class="qrTypeBtn" data-type="image">
+    🖼 Imagen
+  </button>
+
+  <button type="button" class="qrTypeBtn" data-type="pdf">
+    📄 PDF
+  </button>
+
+  <button type="button" class="qrTypeBtn" data-type="audio">
+    🎵 Audio
+  </button>
+</div>
       <input
   type="text"
   id="qrName"
@@ -71,7 +98,7 @@
       <input
         type="text"
         id="qrText"
-        placeholder="Pegá un enlace o escribí un texto"
+        placeholder="https://tusitio.com"
       >
       <input
   type="file"
@@ -82,6 +109,10 @@
       <button id="generateBtn">
         Generar QR
       </button>
+      <div class="qrHelp">
+  <strong>QR dinámico</strong>
+  <p>Podrás cambiar el destino más adelante sin volver a crear ni imprimir el código QR.</p>
+</div>
 
       <div id="qrcode"></div>
     </section>
@@ -116,9 +147,23 @@
     </button>
   </div>
 
-  <div id="myQrs">
-    <p>Todavía no cargamos tus códigos.</p>
+  <div class="myQrsTitle">
+  <div>
+    <h2>Mis códigos QR</h2>
+    <p>Administrá, editá y descargá tus códigos.</p>
+    <p id="qrCount" class="qrCount"></p>
   </div>
+</div>
+
+<input
+  type="search"
+  id="qrSearch"
+  placeholder="🔍 Buscar por nombre..."
+  autocomplete="off"
+>
+<div id="myQrs">
+  <p>Todavía no cargamos tus códigos.</p>
+</div>
 
 </section>
   </main>

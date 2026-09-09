@@ -1,3 +1,21 @@
+:root {
+  --primary: #635bff;
+  --primary-dark: #4f46e5;
+  --primary-soft: #eef2ff;
+
+  --background: #f5f7fb;
+  --surface: #ffffff;
+
+  --text: #111827;
+  --text-soft: #6b7280;
+
+  --border: #e5e7eb;
+
+  --danger: #dc2626;
+  --danger-soft: #fef2f2;
+}
+
+
 * {
   box-sizing: border-box;
 }
@@ -5,10 +23,9 @@
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-  background: #f4f6f8;
-  color: #1f2937;
+  background: linear-gradient(180deg, #f8faff 0%, var(--background) 100%);
+  color: var(--text);
 }
-
 header {
   text-align: center;
   padding: 50px 20px 30px;
@@ -28,6 +45,7 @@ header p {
 main {
   display: flex;
   justify-content: center;
+  align-items: flex-start;
   padding: 20px;
 }
 
@@ -73,4 +91,793 @@ button:hover {
   display: flex;
   justify-content: center;
   margin-top: 30px;
+}
+.qrItem {
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 18px;
+  margin-bottom: 18px;
+  background: #ffffff;
+}
+
+.qrItemHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.qrItemName {
+  font-size: 18px;
+  color: #111827;
+}
+
+.qrItemType {
+  font-size: 13px;
+  background: #f3f4f6;
+  padding: 6px 10px;
+  border-radius: 999px;
+  color: #4b5563;
+}
+
+.savedQr {
+  display: flex;
+  justify-content: center;
+  margin: 18px 0;
+}
+
+.qrItemActions {
+  display: grid;
+ grid-template-columns: 1.25fr 1fr 1fr;
+  gap: 8px;
+}
+
+.qrItemActions button {
+  margin: 0;
+}
+/* ===== ENCABEZADO ===== */
+
+.mainHeader {
+  
+  padding: 20px 28px;
+  margin-bottom: 28px;
+    background: rgba(255, 255, 255, 0.92);
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 8px 30px rgba(17, 24, 39, 0.05);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.brandIcon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--primary), #8b5cf6);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  font-weight: 700;
+}
+
+.brand h1 {
+  margin: 0;
+  font-size: 24px;
+  color: #111827;
+}
+
+.brand p {
+  margin: 3px 0 0;
+  font-size: 14px;
+  color: #6b7280;
+}
+.mainHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#headerLogoutBtn {
+  width: auto;
+  margin: 0;
+  padding: 10px 18px;
+  border-radius: 9px;
+}
+.qrTypeSelector {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.qrTypeBtn {
+  padding: 12px 6px;
+  margin: 0;
+  font-size: 14px;
+  border-radius: 9px;
+}
+
+.qrTypeBtn.active {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+.qrTypeSelector {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin: 16px 0;
+}
+
+.qrTypeBtn {
+  margin: 0;
+  padding: 10px 8px;
+  background: #f3f4f6;
+  color: #111827;
+  border: 1px solid #d1d5db;
+  border-radius: 9px;
+  font-size: 14px;
+}
+
+.qrTypeBtn.active {
+  background: #111827;
+  color: #ffffff;
+  border-color: #111827;
+}
+.qrTypeBtn:focus {
+  outline: none;
+}
+#qrFile {
+  padding: 10px;
+  background: #f9fafb;
+  border: 1px solid #d1d5db;
+  border-radius: 9px;
+  color: #6b7280;
+}
+
+#qrFile::file-selector-button {
+  background: #111827;
+  color: white;
+  border: none;
+  border-radius: 7px;
+  padding: 9px 14px;
+  margin-right: 12px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+#qrFile::file-selector-button:hover {
+  background: #1f2937;
+}
+/* ===== IDENTIDAD QRCREA ===== */
+
+#generateBtn {
+  background: linear-gradient(135deg, var(--primary), #8b5cf6);
+  color: white;
+  border: none;
+  box-shadow: 0 6px 18px rgba(99, 91, 255, 0.22);
+}
+
+#generateBtn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 9px 24px rgba(99, 91, 255, 0.30);
+}
+
+.qrTypeBtn.active {
+  background: linear-gradient(135deg, var(--primary), #8b5cf6);
+  border-color: transparent;
+  color: white;
+}
+
+.editQrBtn {
+  background: var(--primary-soft);
+  color: var(--primary-dark);
+  border: 1px solid #dddafe;
+}
+
+.downloadQrBtn {
+  background: #111827;
+  color: white;
+}
+
+.deleteQrBtn {
+  background: var(--danger-soft);
+  color: var(--danger);
+  border: 1px solid #fecaca;
+}
+.qrHelp {
+  margin-top: 18px;
+  padding: 16px 18px;
+  background: var(--primary-soft);
+  border: 1px solid #dddafe;
+  border-radius: 12px;
+}
+
+.qrHelp strong {
+  display: block;
+  color: var(--primary-dark);
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+.qrHelp p {
+  margin: 0;
+  color: var(--text-soft);
+  font-size: 13px;
+  line-height: 1.5;
+}
+.qrItem {
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 18px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.qrItem:hover {
+  transform: translateY(-2px);
+  border-color: #d8d5ff;
+  box-shadow: 0 12px 30px rgba(17, 24, 39, 0.08);
+}
+
+.qrItemType {
+  background: var(--primary-soft);
+  color: var(--primary-dark);
+  border: 1px solid #e2e0ff;
+}
+
+.savedQr {
+  background: #ffffff;
+  padding: 8px;
+  border-radius: 12px;
+}
+.qrCount {
+  margin: 4px 0 16px;
+  font-size: 13px;
+  color: var(--text-soft);
+}
+/* =========================
+   LANDING PAGE - QRcrea
+========================= */
+
+.landingHeader {
+  width: 100%;
+  min-height: 82px;
+  padding: 0 5%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+  box-sizing: border-box;
+}
+
+.landingBrand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.landingBrand h1 {
+  margin: 0;
+  font-size: 24px;
+}
+
+.landingBrand p {
+  margin: 4px 0 0;
+  color: #64748b;
+  font-size: 14px;
+}
+
+.landingActions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.loginLink,
+.primaryLink,
+.secondaryLink {
+  text-decoration: none;
+  font-weight: 700;
+  border-radius: 10px;
+  padding: 12px 20px;
+}
+
+.loginLink {
+  color: #111827;
+}
+
+.primaryLink {
+  color: white;
+  background: linear-gradient(135deg, #5b5cff, #8b5cf6);
+  box-shadow: 0 8px 20px rgba(99, 91, 255, 0.22);
+}
+
+.landingMain {
+  min-height: calc(100vh - 82px);
+  background:
+    radial-gradient(circle at 80% 20%, rgba(139,92,246,.12), transparent 28%),
+    radial-gradient(circle at 15% 70%, rgba(91,92,255,.08), transparent 30%),
+    #f8faff;
+}
+
+.hero {
+  max-width: 1200px;
+  margin: auto;
+  min-height: 650px;
+  padding: 70px 30px;
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  align-items: center;
+  gap: 80px;
+  box-sizing: border-box;
+}
+
+.heroBadge {
+  display: inline-block;
+  color: #5b4df7;
+  background: #eeecff;
+  border: 1px solid #d9d5ff;
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.heroContent h2 {
+  font-size: 52px;
+  line-height: 1.08;
+  letter-spacing: -1.8px;
+  margin: 22px 0;
+  color: #0f172a;
+}
+
+.heroContent > p {
+  font-size: 19px;
+  line-height: 1.65;
+  color: #64748b;
+  max-width: 600px;
+}
+
+.heroActions {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  margin-top: 32px;
+}
+
+.heroButton {
+  padding: 15px 25px;
+}
+
+.secondaryLink {
+  color: #4f46e5;
+  background: white;
+  border: 1px solid #d8dce6;
+}
+
+.heroVisual {
+  display: flex;
+  justify-content: center;
+}
+
+.demoQr {
+  width: 340px;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 22px;
+  padding: 25px;
+  box-shadow: 0 25px 70px rgba(15, 23, 42, 0.13);
+  transform: rotate(2deg);
+}
+
+.demoQrTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 700;
+}
+
+.demoBadge {
+  background: #eeecff;
+  color: #6558f5;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+}
+
+.fakeQr {
+  width: 210px;
+  height: 210px;
+  margin: 28px auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    repeating-linear-gradient(
+      45deg,
+      #111827 0px,
+      #111827 8px,
+      white 8px,
+      white 16px
+    );
+  color: white;
+  font-size: 28px;
+  font-weight: 800;
+}
+
+.demoQr p {
+  color: #64748b;
+  text-align: center;
+}
+
+@media (max-width: 800px) {
+  .hero {
+    grid-template-columns: 1fr;
+    gap: 45px;
+  }
+
+  .heroContent h2 {
+    font-size: 40px;
+  }
+
+  .landingBrand p {
+    display: none;
+  }
+}
+.landingQr {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 28px auto;
+}
+
+.landingQr img,
+.landingQr canvas {
+  width: 210px !important;
+  height: 210px !important;
+}
+/* =========================
+   CÓMO FUNCIONA
+========================= */
+
+.howSection {
+  padding: 70px 30px 45px;
+  background: #ffffff;
+}
+
+.howHeader {
+  max-width: 700px;
+  margin: 0 auto 50px;
+  text-align: center;
+}
+
+.howHeader h2 {
+  margin: 18px 0 10px;
+  font-size: 38px;
+  color: #0f172a;
+}
+
+.howHeader p {
+  margin: 0;
+  font-size: 17px;
+  color: #64748b;
+}
+
+.howSteps {
+  max-width: 1100px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+}
+
+.howCard {
+  padding: 30px;
+  border: 1px solid #e5e7eb;
+  border-radius: 18px;
+  background: #ffffff;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.howCard:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.10);
+}
+
+.stepNumber {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  margin-bottom: 22px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #5b5cff, #8b5cf6);
+  color: #ffffff;
+  font-weight: 800;
+}
+
+.howCard h3 {
+  margin: 0 0 12px;
+  font-size: 20px;
+  color: #0f172a;
+}
+
+.howCard p {
+  margin: 0;
+  line-height: 1.6;
+  color: #64748b;
+}
+
+@media (max-width: 800px) {
+  .howSteps {
+    grid-template-columns: 1fr;
+  }
+}
+html {
+  scroll-behavior: smooth;
+}
+.secondaryLink {
+  position: relative;
+  z-index: 10;
+  cursor: pointer;
+  pointer-events: auto;
+}
+.heroActions {
+  position: relative;
+  z-index: 10;
+}
+.landingMain {
+  display: block;
+  padding: 0;
+  margin: 0;
+  max-width: none;
+  width: 100%;
+}
+/* ===== FORMATOS ===== */
+
+.formatsSection {
+  padding: 70px 40px 90px;
+  background: #ffffff;
+}
+
+.formatsHeader {
+  text-align: center;
+  max-width: 650px;
+  margin: 0 auto 50px;
+}
+
+.formatsHeader h2 {
+  font-size: 36px;
+  margin: 18px 0 12px;
+  color: #0f172a;
+}
+
+.formatsHeader p {
+  font-size: 17px;
+  color: #64748b;
+  line-height: 1.6;
+}
+
+.formatsGrid {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.formatCard {
+  padding: 28px;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  background: #ffffff;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.formatCard:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.10);
+}
+
+.formatIcon {
+  width: 52px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  background: #f1efff;
+  font-size: 24px;
+  margin-bottom: 22px;
+}
+
+.formatCard h3 {
+  font-size: 20px;
+  margin: 0 0 10px;
+  color: #0f172a;
+}
+
+.formatCard p {
+  margin: 0;
+  color: #64748b;
+  line-height: 1.6;
+  font-size: 15px;
+}
+/* =========================
+   POR QUÉ QRCREA
+========================= */
+
+.benefitsSection {
+   padding: 75px 30px 65px;
+    background: #f7f8ff;
+}
+
+.benefitsHeader {
+    max-width: 700px;
+    margin: 0 auto 55px;
+    text-align: center;
+}
+
+.benefitsHeader h2 {
+    font-size: 38px;
+    margin: 16px 0 12px;
+    color: #101828;
+}
+
+.benefitsHeader p {
+    font-size: 17px;
+    color: #667085;
+    line-height: 1.6;
+}
+
+.benefitsGrid {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+}
+
+.benefitItem {
+    display: flex;
+    gap: 18px;
+    align-items: flex-start;
+    padding: 28px;
+}
+
+.benefitIcon {
+    width: 52px;
+    height: 52px;
+    min-width: 52px;
+    border-radius: 14px;
+    background: #eeeaff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+}
+
+.benefitItem h3 {
+    margin: 2px 0 9px;
+    font-size: 19px;
+    color: #101828;
+}
+
+.benefitItem p {
+    margin: 0;
+    color: #667085;
+    line-height: 1.6;
+}
+/* =========================
+   CTA FINAL
+========================= */
+
+.finalCta {
+  padding: 90px 30px;
+  background: linear-gradient(135deg, #5b5cff, #8b5cf6);
+}
+
+.finalCtaContent {
+  max-width: 760px;
+  margin: 0 auto;
+  text-align: center;
+  color: white;
+}
+
+.finalCta .heroBadge {
+  background: rgba(255, 255, 255, 0.14);
+  color: white;
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.finalCta h2 {
+  margin: 20px 0 14px;
+  font-size: 42px;
+  color: white;
+}
+
+.finalCta p {
+  margin: 0 auto 30px;
+  max-width: 620px;
+  font-size: 18px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.finalCtaButton {
+  display: inline-block;
+  padding: 15px 26px;
+  background: white;
+  color: #5b4df7;
+  text-decoration: none;
+  font-weight: 800;
+  border-radius: 11px;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.18);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.finalCtaButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 36px rgba(15, 23, 42, 0.24);
+}
+/* =========================
+   FOOTER
+========================= */
+
+.landingFooter {
+  padding: 32px 60px;
+  background: #ffffff;
+  border-top: 1px solid #e7e9f2;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 30px;
+}
+
+.footerBrand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.footerBrand .brandIcon {
+  width: 42px;
+  height: 42px;
+  border-radius: 11px;
+  background: linear-gradient(135deg, #5b5cff, #8b5cf6);
+  color: white;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.footerBrand strong {
+  display: block;
+  font-size: 18px;
+  color: #101828;
+}
+
+.footerBrand p {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: #667085;
+}
+
+.footerCopy {
+  margin: 0;
+  font-size: 14px;
+  color: #667085;
 }
