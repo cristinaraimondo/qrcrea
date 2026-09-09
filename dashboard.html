@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QRcrea</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  
+   <header class="mainHeader">
+  <div class="brand">
+    <div class="brandIcon">Q</div>
+
+    <div>
+      <h1>QRcrea</h1>
+      <p>Códigos QR dinámicos, simples y seguros.</p>
+    </div>
+  </div>
+  <button id="headerLogoutBtn" style="display:none;">
+  Cerrar sesión
+</button>
+</header>
+
+  <main>
+   <section class="card" id="registerCard">
+    <span id="registro"></span>
+  <h2>Crear cuenta</h2>
+
+  <input
+    type="email"
+    id="registerEmail"
+    placeholder="Tu correo electrónico"
+  >
+
+  <input
+    type="password"
+    id="registerPassword"
+    placeholder="Tu contraseña"
+  >
+
+  <button id="registerBtn">
+    Crear cuenta
+  </button>
+
+  <p id="registerMessage"></p>
+</section>
+<section class="card" id="loginCard">
+  <span id="login"></span>
+  <h2>Iniciar sesión</h2>
+
+  <input
+    type="email"
+    id="loginEmail"
+    placeholder="Tu correo electrónico"
+  >
+
+  <input
+    type="password"
+    id="loginPassword"
+    placeholder="Tu contraseña"
+  >
+
+  <button id="loginBtn">
+    Iniciar sesión
+  </button>
+
+  <p id="loginMessage"></p>
+  <button id="logoutBtn" style="display:none;">
+  Cerrar sesión
+</button>
+</section>
+    <section class="card">
+      <h2>Crear código QR</h2>
+      <div class="qrTypeSelector">
+  <button type="button" class="qrTypeBtn active" data-type="url">
+    🔗 Enlace
+  </button>
+
+  <button type="button" class="qrTypeBtn" data-type="image">
+    🖼 Imagen
+  </button>
+
+  <button type="button" class="qrTypeBtn" data-type="pdf">
+    📄 PDF
+  </button>
+
+  <button type="button" class="qrTypeBtn" data-type="audio">
+    🎵 Audio
+  </button>
+</div>
+      <input
+  type="text"
+  id="qrName"
+  placeholder="Nombre del QR (ej: Mi página web)"
+>
+
+      <input
+        type="text"
+        id="qrText"
+        placeholder="https://tusitio.com"
+      >
+      <input
+  type="file"
+  id="qrFile"
+  accept="image/*,audio/*,application/pdf"
+>
+
+      <button id="generateBtn">
+        Generar QR
+      </button>
+      <div class="qrHelp">
+  <strong>QR dinámico</strong>
+  <p>Podrás cambiar el destino más adelante sin volver a crear ni imprimir el código QR.</p>
+</div>
+
+      <div id="qrcode"></div>
+    </section>
+   <section class="card">
+
+  <div id="editPanel" style="display:none;">
+    <h3>Editar destino</h3>
+
+    <select id="editType">
+      <option value="url">Enlace</option>
+      <option value="file">Archivo</option>
+    </select>
+
+    <input
+      type="text"
+      id="editUrl"
+      placeholder="https://..."
+    >
+
+    <input
+      type="file"
+      id="editFile"
+      accept="image/*,audio/*,application/pdf"
+    >
+
+    <button id="saveEditBtn">
+      Guardar cambios
+    </button>
+
+    <button id="cancelEditBtn">
+      Cancelar
+    </button>
+  </div>
+
+  <div class="myQrsTitle">
+  <div>
+    <h2>Mis códigos QR</h2>
+    <p>Administrá, editá y descargá tus códigos.</p>
+    <p id="qrCount" class="qrCount"></p>
+  </div>
+</div>
+
+<input
+  type="search"
+  id="qrSearch"
+  placeholder="🔍 Buscar por nombre..."
+  autocomplete="off"
+>
+<div id="myQrs">
+  <p>Todavía no cargamos tus códigos.</p>
+</div>
+
+</section>
+  </main>
+
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="app.js"></script>
+
+</body>
+</html>
