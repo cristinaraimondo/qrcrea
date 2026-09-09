@@ -219,10 +219,29 @@ registerBtn.addEventListener("click", async () => {
     return;
   }
 
+ if (!data.user) {
   registerMessage.textContent =
-    "✅ Cuenta creada. Revisá tu correo para confirmar el registro.";
+    "❌ No se pudo crear la cuenta.";
+  return;
+}
 
-  console.log("Usuario registrado:", data);
+if (data.user.identities && data.user.identities.length === 0) {
+
+  registerMessage.innerHTML =
+    '⚠️ Ese correo ya está registrado. <a href="#login" id="goToLogin">Iniciá sesión</a>.';
+
+  document.getElementById("goToLogin").addEventListener("click", () => {
+    registerCard.style.display = "none";
+    loginCard.style.display = "block";
+  });
+
+  return;
+}
+
+registerMessage.textContent =
+  "✅ Cuenta creada. Revisá tu correo para confirmar el registro.";
+
+console.log("Usuario registrado:", data);
 });
 const loginBtn = document.getElementById("loginBtn");
 const loginEmail = document.getElementById("loginEmail");
@@ -251,11 +270,24 @@ loginBtn.addEventListener("click", async () => {
 
   loginMessage.textContent = "✅ Sesión iniciada correctamente.";
   console.log("Usuario conectado:", data.user);
+  await actualizarSesion();
+await cargarMisQR();
 });
 const logoutBtn = document.getElementById("logoutBtn");
 const registerCard = document.getElementById("registerCard");
 const loginCard = document.getElementById("loginCard");
 const headerLogoutBtn = document.getElementById("headerLogoutBtn");
+const hash = window.location.hash;
+
+if (hash === "#registro") {
+  registerCard.style.display = "block";
+  loginCard.style.display = "none";
+}
+
+if (hash === "#login") {
+  registerCard.style.display = "none";
+  loginCard.style.display = "block";
+}
 
 
 async function actualizarSesion() {
@@ -276,8 +308,18 @@ async function actualizarSesion() {
   logoutBtn.style.display = "none";
   headerLogoutBtn.style.display = "none";
 
-  registerCard.style.display = "block";
-  loginCard.style.display = "block";
+  if (window.location.hash === "#registro") {
+    registerCard.style.display = "block";
+    loginCard.style.display = "none";
+
+  } else if (window.location.hash === "#login") {
+    registerCard.style.display = "none";
+    loginCard.style.display = "block";
+
+  } else {
+    registerCard.style.display = "block";
+    loginCard.style.display = "block";
+  }
 }
 }
 
