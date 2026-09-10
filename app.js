@@ -186,7 +186,7 @@ if (logoArchivo) {
 
   qrContainer.innerHTML = "";
 
-  const slug = `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+const slug = `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
  const urlPublica = new URL(`q.html?slug=${slug}`, window.location.href).href;
 
  new QRCode(qrContainer, {
