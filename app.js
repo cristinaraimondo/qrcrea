@@ -136,8 +136,7 @@ if (selectedQrType !== "url" && !archivo) {
 let tipoQr = "url";
 
 if (archivo) {
- const extension = archivo.name.split(".").pop().toLowerCase();
-const nombreSeguro = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${extension}`;
+  const nombreSeguro = `${Date.now()}-${archivo.name}`;
   const rutaArchivo = `${user.id}/${nombreSeguro}`;
 
   const { error: uploadError } = await supabaseClient.storage
