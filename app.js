@@ -168,7 +168,8 @@ if (logoArchivo) {
     return;
   }
 
-  const nombreLogoSeguro = `${Date.now()}-logo-${logoArchivo.name}`;
+  const extension = archivo.name.split(".").pop();
+const nombreSeguro = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${extension}`;
   const rutaLogo = `${user.id}/${nombreLogoSeguro}`;
 
   const { error: logoUploadError } = await supabaseClient.storage
