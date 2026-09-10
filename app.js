@@ -168,8 +168,7 @@ if (logoArchivo) {
     return;
   }
 
-  const extension = archivo.name.split(".").pop();
-const nombreSeguro = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${extension}`;
+  const nombreLogoSeguro = `${Date.now()}-logo-${logoArchivo.name}`;
   const rutaLogo = `${user.id}/${nombreLogoSeguro}`;
 
   const { error: logoUploadError } = await supabaseClient.storage
@@ -574,7 +573,8 @@ saveEditBtn.addEventListener("click", async () => {
 const archivo = editFile.files[0];
 
 if (archivo) {
-  const nombreSeguro = `${Date.now()}-${archivo.name}`;
+  const extension = archivo.name.split(".").pop().toLowerCase();
+const nombreSeguro = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${extension}`;
   const rutaArchivo = `${user.id}/${nombreSeguro}`;
 
   const { error: uploadError } = await supabaseClient.storage
