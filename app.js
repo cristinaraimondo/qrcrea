@@ -26,6 +26,7 @@ const qrTypeBtns = document.querySelectorAll(".qrTypeBtn");
 const qrFileInput = document.getElementById("qrFile");
 const qrSearch = document.getElementById("qrSearch");
 const qrCount = document.getElementById("qrCount");
+const qrLogoInput = document.getElementById("qrLogo");
 
 
 
@@ -104,7 +105,9 @@ generateBtn.addEventListener("click", async () => {
   const qrName = document.getElementById("qrName").value.trim();
   const contenido = qrText.value.trim();
   const qrFile = document.getElementById("qrFile");
-const archivo = qrFile.files[0];
+  const archivo = qrFile.files[0];
+  const logoArchivo = qrLogoInput.files[0];
+  let logoPath = null;
 
 if (!qrName) {
   alert("Completá el nombre del QR.");
@@ -158,6 +161,28 @@ if (archivo) {
     tipoQr = "file";
   }
 }
+if (logoArchivo) {
+
+  if (!logoArchivo.type.startsWith("image/")) {
+    alert("El logo debe ser una imagen.");
+    return;
+  }
+
+  const nombreLogoSeguro = `${Date.now()}-logo-${logoArchivo.name}`;
+  const rutaLogo = `${user.id}/${nombreLogoSeguro}`;
+
+  const { error: logoUploadError } = await supabaseClient.storage
+    .from("user-files")
+    .upload(rutaLogo, logoArchivo);
+
+  if (logoUploadError) {
+    console.error("Error al subir logo:", logoUploadError);
+    alert("No se pudo subir el logo.");
+    return;
+  }
+
+  logoPath = rutaLogo;
+}
 
   qrContainer.innerHTML = "";
 
@@ -167,9 +192,24 @@ if (archivo) {
  new QRCode(qrContainer, {
   text: urlPublica,
   width: 220,
-  height: 220
+  height: 220,
+  correctLevel: QRCode.CorrectLevel.H
 });
 
+const logoFile = qrLogoInput.files[0];
+
+if (logoFile) {
+  const logo = document.createElement("img");
+
+  logo.src = URL.createObjectURL(logoFile);
+  logo.className = "qrCenterLogo";
+
+  qrContainer.style.position = "relative";
+  qrContainer.style.width = "220px";
+  qrContainer.style.height = "220px";
+
+  qrContainer.appendChild(logo);
+}
  
 
   const { data, error } = await supabaseClient
@@ -179,7 +219,8 @@ if (archivo) {
       name: qrName,
       type: tipoQr,
       destination_url: destinoFinal,
-      slug: slug
+      slug: slug,
+      logo_path: logoPath
     })
     .select();
 
@@ -369,12 +410,13 @@ async function cargarMisQR() {
 
   myQrs.innerHTML = "";
 qrCount.textContent = `${data.length} ${data.length === 1 ? "código guardado" : "códigos guardados"}`;
-  data.forEach((qr) => {
+  data.forEach(async(qr) => {
     const item = document.createElement("div");
 
 const urlQr = new URL(`q.html?slug=${qr.slug}`, window.location.href).href;
 item.dataset.name = qr.name;
 item.dataset.qrUrl = urlQr;
+item.dataset.logoPath = qr.logo_path || "";
 
 const tipoTexto = {
   url: "🔗 Enlace",
@@ -422,9 +464,27 @@ const qrGuardado = item.querySelector(".savedQr");
 new QRCode(qrGuardado, {
   text: urlQr,
   width: 160,
-  height: 160
+  height: 160,
+  correctLevel: QRCode.CorrectLevel.H
 });
+if (qr.logo_path) {
+  const { data: logoData } = await supabaseClient.storage
+    .from("user-files")
+    .createSignedUrl(qr.logo_path, 3600);
 
+  if (logoData?.signedUrl) {
+    const logo = document.createElement("img");
+
+    logo.src = logoData.signedUrl;
+    logo.className = "qrCenterLogo";
+
+    qrGuardado.style.position = "relative";
+    qrGuardado.style.width = "160px";
+    qrGuardado.style.height = "160px";
+
+    qrGuardado.appendChild(logo);
+  }
+}
 
   });
 }
@@ -605,43 +665,80 @@ document.addEventListener("click", (e) => {
 
  const item = e.target.closest(".qrItem");
   const urlQr = item.dataset.qrUrl;
+  const logoPath = item.dataset.logoPath;
 
   if (!urlQr) {
     alert("No se pudo obtener la dirección del QR.");
     return;
   }
+const qrTemporal = document.createElement("div");
+ new QRCode(qrTemporal, {
+  text: urlQr,
+  width: 1000,
+  height: 1000,
+  correctLevel: QRCode.CorrectLevel.H
+});
 
-  const qrTemporal = document.createElement("div");
+  setTimeout(async () => {
+  const canvas = qrTemporal.querySelector("canvas");
 
-  new QRCode(qrTemporal, {
-    text: urlQr,
-    width: 1000,
-    height: 1000
-  });
+  if (!canvas) {
+    alert("No se pudo preparar el QR para descargar.");
+    return;
+  }
 
-  setTimeout(() => {
-    const canvas = qrTemporal.querySelector("canvas");
-    const img = qrTemporal.querySelector("img");
+  // Si este QR tiene logo, lo dibujamos dentro del PNG
+  if (logoPath) {
+    console.log("DESCARGA - logoPath:", logoPath);
+    const { data: logoBlob, error: logoError } =
+      await supabaseClient.storage
+        .from("user-files")
+        .download(logoPath);
 
-    let dataUrl = null;
+    if (!logoError && logoBlob) {
+      const logoUrl = URL.createObjectURL(logoBlob);
+      const logo = new Image();
 
-    if (canvas) {
-      dataUrl = canvas.toDataURL("image/png");
-    } else if (img) {
-      dataUrl = img.src;
+      await new Promise((resolve) => {
+        logo.onload = resolve;
+        logo.src = logoUrl;
+      });
+
+      const ctx = canvas.getContext("2d");
+
+     const logoSize = 140;      // antes 200
+     const fondoSize = 170;     // antes 230
+
+      const fondoX = (canvas.width - fondoSize) / 2;
+      const fondoY = (canvas.height - fondoSize) / 2;
+
+      const logoX = (canvas.width - logoSize) / 2;
+      const logoY = (canvas.height - logoSize) / 2;
+
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(fondoX, fondoY, fondoSize, fondoSize);
+
+      ctx.drawImage(
+        logo,
+        logoX,
+        logoY,
+        logoSize,
+        logoSize
+      );
+
+      URL.revokeObjectURL(logoUrl);
     }
+  }
 
-    if (!dataUrl) {
-      alert("No se pudo preparar el QR para descargar.");
-      return;
-    }
+  const dataUrl = canvas.toDataURL("image/png");
 
-    const nombreQr = item.dataset.name || "qrcrea-qr";
+  const nombreQr = item.dataset.name || "qrcrea-qr";
 
-    const link = document.createElement("a");
-    link.href = dataUrl;
-    link.download = `${nombreQr}.png`;
-    link.click();
-  }, 100);
+  const link = document.createElement("a");
+  link.href = dataUrl;
+  link.download = `${nombreQr}.png`;
+  link.click();
+
+}, 100);
 });
  
