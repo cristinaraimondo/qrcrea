@@ -27,7 +27,7 @@ const qrFileInput = document.getElementById("qrFile");
 const qrSearch = document.getElementById("qrSearch");
 const qrCount = document.getElementById("qrCount");
 const qrLogoInput = document.getElementById("qrLogo");
-
+const qrColorInput = document.getElementById("qrColor");
 
 
 qrSearch.addEventListener("input", () => {
@@ -193,6 +193,7 @@ const slug = `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
   text: urlPublica,
   width: 220,
   height: 220,
+  colorDark: qrColorInput.value,
   correctLevel: QRCode.CorrectLevel.H
 });
 
@@ -220,7 +221,8 @@ if (logoFile) {
       type: tipoQr,
       destination_url: destinoFinal,
       slug: slug,
-      logo_path: logoPath
+      logo_path: logoPath,
+      qr_color: qrColorInput.value
     })
     .select();
 
@@ -417,6 +419,7 @@ const urlQr = new URL(`q.html?slug=${qr.slug}`, window.location.href).href;
 item.dataset.name = qr.name;
 item.dataset.qrUrl = urlQr;
 item.dataset.logoPath = qr.logo_path || "";
+item.dataset.qrColor = qr.qr_color || "#000000";
 
 const tipoTexto = {
   url: "🔗 Enlace",
@@ -465,6 +468,7 @@ new QRCode(qrGuardado, {
   text: urlQr,
   width: 160,
   height: 160,
+  colorDark: qr.qr_color || "#000000",
   correctLevel: QRCode.CorrectLevel.H
 });
 if (qr.logo_path) {
@@ -667,6 +671,7 @@ document.addEventListener("click", (e) => {
  const item = e.target.closest(".qrItem");
   const urlQr = item.dataset.qrUrl;
   const logoPath = item.dataset.logoPath;
+  const qrColor = item.dataset.qrColor || "#000000";
 
   if (!urlQr) {
     alert("No se pudo obtener la dirección del QR.");
@@ -677,6 +682,7 @@ const qrTemporal = document.createElement("div");
   text: urlQr,
   width: 1000,
   height: 1000,
+  colorDark: qrColor,
   correctLevel: QRCode.CorrectLevel.H
 });
 
