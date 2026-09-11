@@ -116,11 +116,15 @@
 >
 <label for="qrColor">Color del código QR</label>
 
-<input
-  type="color"
-  id="qrColor"
-  value="#000000"
->
+<div class="qrColorControl">
+  <input
+    type="color"
+    id="qrColor"
+    value="#000000"
+  >
+
+  <span id="qrColorValue">#000000</span>
+</div>
       <button id="generateBtn">
         Generar QR
       </button>

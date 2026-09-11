@@ -29,6 +29,12 @@ const qrCount = document.getElementById("qrCount");
 const qrLogoInput = document.getElementById("qrLogo");
 const qrColorInput = document.getElementById("qrColor");
 
+const qrColorValue = document.getElementById("qrColorValue");
+
+qrColorInput.addEventListener("input", () => {
+  qrColorValue.textContent = qrColorInput.value.toUpperCase();
+});
+
 
 function colorEsDemasiadoClaro(hex) {
   const r = parseInt(hex.slice(1, 3), 16);
@@ -249,6 +255,13 @@ if (logoFile) {
 
   console.log("QR guardado:", data);
   await cargarMisQR();
+  document.getElementById("qrName").value = "";
+qrText.value = "";
+qrFileInput.value = "";
+qrLogoInput.value = "";
+
+qrColorInput.value = "#000000";
+qrColorValue.textContent = "#000000";
   alert("✅ QR generado y guardado correctamente.");
 });
 const registerBtn = document.getElementById("registerBtn");

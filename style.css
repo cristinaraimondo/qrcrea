@@ -950,3 +950,29 @@ html {
 
   z-index: 10;
 }
+.qrColorControl {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.qrColorControl input[type="color"] {
+  width: 56px;
+  height: 42px;
+  padding: 3px;
+  border: 1px solid #d8d8e5;
+  border-radius: 10px;
+  background: white;
+  cursor: pointer;
+}
+
+#qrColorValue {
+  font-size: 14px;
+  font-weight: 600;
+  color: #555;
+  background: #f5f4ff;
+  border: 1px solid #ddd9ff;
+  border-radius: 8px;
+  padding: 9px 12px;
+}
