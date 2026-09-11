@@ -30,6 +30,17 @@ const qrLogoInput = document.getElementById("qrLogo");
 const qrColorInput = document.getElementById("qrColor");
 
 
+function colorEsDemasiadoClaro(hex) {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+
+  const brillo = (r * 299 + g * 587 + b * 114) / 1000;
+
+  return brillo > 190;
+}
+
+
 qrSearch.addEventListener("input", () => {
   const busqueda = qrSearch.value.toLowerCase().trim();
 
@@ -124,6 +135,10 @@ if (selectedQrType !== "url" && !archivo) {
   return;
 }
 
+if (colorEsDemasiadoClaro(qrColorInput.value)) {
+  alert("Elegí un color más oscuro para garantizar que el código QR pueda escanearse correctamente.");
+  return;
+}
   const {
     data: { user }
   } = await supabaseClient.auth.getUser();
