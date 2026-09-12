@@ -28,13 +28,20 @@ const qrSearch = document.getElementById("qrSearch");
 const qrCount = document.getElementById("qrCount");
 const qrLogoInput = document.getElementById("qrLogo");
 const qrColorInput = document.getElementById("qrColor");
+const vcardFields = document.getElementById("vcardFields");
 
 const qrColorValue = document.getElementById("qrColorValue");
 
 qrColorInput.addEventListener("input", () => {
   qrColorValue.textContent = qrColorInput.value.toUpperCase();
 });
+const qrBackgroundColorInput = document.getElementById("qrBackgroundColor");
+const qrBackgroundColorValue = document.getElementById("qrBackgroundColorValue");
 
+qrBackgroundColorInput.addEventListener("input", () => {
+  qrBackgroundColorValue.textContent =
+    qrBackgroundColorInput.value.toUpperCase();
+});
 
 function colorEsDemasiadoClaro(hex) {
   const r = parseInt(hex.slice(1, 3), 16);
@@ -92,6 +99,21 @@ let selectedQrType = "url";
       qrFileInput.title = "Seleccioná un archivo de audio";
       qrFileInput.setAttribute("aria-label", "Seleccioná un archivo de audio");
     }
+    if (selectedQrType === "vcard") {
+  vcardFields.style.display = "block";
+  qrText.style.display = "none";
+  qrFileInput.style.display = "none";
+} else {
+  vcardFields.style.display = "none";
+
+  if (selectedQrType === "url") {
+    qrText.style.display = "block";
+    qrFileInput.style.display = "none";
+  } else {
+    qrText.style.display = "none";
+    qrFileInput.style.display = "block";
+  }
+}
   }
 }
 
@@ -136,7 +158,7 @@ if (selectedQrType === "url" && !contenido) {
   return;
 }
 
-if (selectedQrType !== "url" && !archivo) {
+if (selectedQrType !== "url" && selectedQrType !== "vcard" && !archivo) {
   alert("Seleccioná el archivo correspondiente.");
   return;
 }
@@ -218,7 +240,8 @@ const slug = `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
   width: 180,
   height: 180,
   colorDark: qrColorInput.value,
-  correctLevel: QRCode.CorrectLevel.H
+  correctLevel: QRCode.CorrectLevel.H,
+  colorLight: qrBackgroundColorInput.value,
 });
 
 const logoFile = qrLogoInput.files[0];
@@ -246,7 +269,8 @@ if (logoFile) {
       destination_url: destinoFinal,
       slug: slug,
       logo_path: logoPath,
-      qr_color: qrColorInput.value
+      qr_color: qrColorInput.value,
+      background_color: qrBackgroundColorInput.value
     })
     .select();
 
@@ -464,7 +488,7 @@ item.className = "qrItem";
 
 item.innerHTML = `
   <div class="qrItemHeader">
-    <strong class="qrItemName">${qr.name}</strong>
+   <strong class="qrItemName" title="${qr.name}">${qr.name}</strong>
     <span class="qrItemType">${tipoTexto[qr.type] || "QR"}</span>
   </div>
 
@@ -502,6 +526,7 @@ new QRCode(qrGuardado, {
   width: 160,
   height: 160,
   colorDark: qr.qr_color || "#000000",
+  colorLight: qr.background_color || "#FFFFFF",
   correctLevel: QRCode.CorrectLevel.H
 });
 if (qr.logo_path) {

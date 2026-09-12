@@ -1008,3 +1008,95 @@ width: fit-content;
   font-size: 14px;
   color: #666;
 }
+#myQrs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+ column-gap: 12px;
+row-gap: 6px;
+  margin-top: 18px;
+}
+#myQrs .qrItem {
+  padding: 6px;
+  min-width: 0;
+}
+
+#myQrs .qrItem button {
+  padding: 7px 8px;
+  font-size: 12px;
+  min-width: 0;
+  height: auto;
+}
+
+#myQrs .qrItem .editQrBtn,
+#myQrs .qrItem .downloadQrBtn,
+#myQrs .qrItem .deleteQrBtn {
+  width: auto;
+}
+#myQrs .qrItem .editQrBtn,
+#myQrs .qrItem .downloadQrBtn,
+#myQrs .qrItem .deleteQrBtn {
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  font-size: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+}
+
+#myQrs .qrItem .editQrBtn::before {
+  content: "✏️";
+  font-size: 15px;
+}
+
+#myQrs .qrItem .downloadQrBtn::before {
+  content: "⬇️";
+  font-size: 16px;
+}
+
+#myQrs .qrItem .deleteQrBtn::before {
+  content: "🗑️";
+  font-size: 15px;
+}
+#myQrs .qrItem {
+  height: 270px;
+  padding: 12px;
+  display: grid;
+  grid-template-rows: 52px 1fr 42px;
+  box-sizing: border-box;
+}
+
+#myQrs .qrItemHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 6px;
+  min-width: 0;
+}
+
+#myQrs .qrItemName {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#myQrs .savedQr {
+  width: 120px !important;
+  height: 120px !important;
+  margin: auto;
+  align-self: center;
+}
+
+#myQrs .savedQr canvas,
+#myQrs .savedQr > img:not(.qrCenterLogo) {
+  width: 120px !important;
+  height: 120px !important;
+}
+
+#myQrs .qrItemActions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}

@@ -90,6 +90,9 @@
   <button type="button" class="qrTypeBtn" data-type="audio">
     🎵 Audio
   </button>
+  <button type="button" class="qrTypeBtn" data-type="vcard">
+  👤 Tarjeta
+</button>
 </div>
       <input
   type="text"
@@ -107,13 +110,23 @@
   id="qrFile"
   accept="image/*,audio/*,application/pdf"
 >
+<div id="vcardFields" style="display:none;">
+  <input type="text" id="vcardName" placeholder="Nombre y apellido">
+  <input type="text" id="vcardCompany" placeholder="Empresa o profesión">
+  <input type="tel" id="vcardPhone" placeholder="Teléfono">
+  <input type="email" id="vcardEmail" placeholder="Correo electrónico">
+  <input type="url" id="vcardWebsite" placeholder="Sitio web">
+</div>
 <label for="qrLogo">Logo o imagen central (opcional)</label>
 
 <input
   type="file"
   id="qrLogo"
   accept="image/png,image/jpeg,image/webp"
->
+><div class="qrDesignPanel">
+  <h3>Diseño y personalización</h3>
+  <p>Elegí los colores de tu código QR</p>
+
 <label for="qrColor">Color del código QR</label>
 
 <div class="qrColorControl">
@@ -124,6 +137,18 @@
   >
 
   <span id="qrColorValue">#000000</span>
+</div>
+<label for="qrBackgroundColor">Color de fondo</label>
+
+<div class="qrColorControl">
+  <input
+    type="color"
+    id="qrBackgroundColor"
+    value="#ffffff"
+  >
+
+  <span id="qrBackgroundColorValue">#FFFFFF</span>
+</div>
 </div>
       <button id="generateBtn">
         Generar QR
