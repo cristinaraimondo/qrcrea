@@ -143,6 +143,11 @@ generateBtn.addEventListener("click", async () => {
 
   const qrName = document.getElementById("qrName").value.trim();
   const contenido = qrText.value.trim();
+  const vcardName = document.getElementById("vcardName").value.trim();
+const vcardCompany = document.getElementById("vcardCompany").value.trim();
+const vcardPhone = document.getElementById("vcardPhone").value.trim();
+const vcardEmail = document.getElementById("vcardEmail").value.trim();
+const vcardWebsite = document.getElementById("vcardWebsite").value.trim();
   const qrFile = document.getElementById("qrFile");
   const archivo = qrFile.files[0];
   const logoArchivo = qrLogoInput.files[0];
@@ -155,6 +160,10 @@ if (!qrName) {
 
 if (selectedQrType === "url" && !contenido) {
   alert("Ingresá un enlace.");
+  return;
+}
+if (selectedQrType === "vcard" && !vcardName) {
+  alert("Completá el nombre de la tarjeta.");
   return;
 }
 
@@ -176,7 +185,20 @@ if (colorEsDemasiadoClaro(qrColorInput.value)) {
     return;
   }
   let destinoFinal = contenido;
-let tipoQr = "url";
+  let tipoQr = "url";
+  let vcardData = null;
+
+if (selectedQrType === "vcard") {
+  tipoQr = "vcard";
+
+  vcardData = {
+    name: vcardName,
+    company: vcardCompany,
+    phone: vcardPhone,
+    email: vcardEmail,
+    website: vcardWebsite
+  };
+}
 
 if (archivo) {
   const nombreSeguro = `${Date.now()}-${archivo.name}`;
@@ -270,7 +292,8 @@ if (logoFile) {
       slug: slug,
       logo_path: logoPath,
       qr_color: qrColorInput.value,
-      background_color: qrBackgroundColorInput.value
+      background_color: qrBackgroundColorInput.value,
+      vcard_data: vcardData,
     })
     .select();
 
