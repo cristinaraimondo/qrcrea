@@ -206,14 +206,17 @@ if (logoArchivo) {
 }
 
   qrContainer.innerHTML = "";
+  const qrResultCard = document.getElementById("qrResultCard");
+qrResultCard.style.display = "block";
+qrContainer.style.borderColor = qrColorInput.value;
 
 const slug = `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
  const urlPublica = new URL(`q.html?slug=${slug}`, window.location.href).href;
 
  new QRCode(qrContainer, {
   text: urlPublica,
-  width: 220,
-  height: 220,
+  width: 180,
+  height: 180,
   colorDark: qrColorInput.value,
   correctLevel: QRCode.CorrectLevel.H
 });
@@ -491,6 +494,8 @@ item.innerHTML = `
 myQrs.appendChild(item);
 
 const qrGuardado = item.querySelector(".savedQr");
+qrGuardado.classList.add("qrGuardadoMarco");
+qrGuardado.style.borderColor = qr.qr_color || "#000000";
 
 new QRCode(qrGuardado, {
   text: urlQr,
@@ -764,8 +769,25 @@ const qrTemporal = document.createElement("div");
       URL.revokeObjectURL(logoUrl);
     }
   }
+  const canvasConMarco = document.createElement("canvas");
+canvasConMarco.width = 1080;
+canvasConMarco.height = 1080;
 
-  const dataUrl = canvas.toDataURL("image/png");
+const ctxMarco = canvasConMarco.getContext("2d");
+
+// Fondo blanco
+ctxMarco.fillStyle = "#ffffff";
+ctxMarco.fillRect(0, 0, 1080, 1080);
+
+// Marco del mismo color del QR
+ctxMarco.strokeStyle = qrColor;
+ctxMarco.lineWidth = 18;
+ctxMarco.strokeRect(9, 9, 1062, 1062);
+
+// QR centrado dentro del marco
+ctxMarco.drawImage(canvas, 40, 40, 1000, 1000);
+
+ const dataUrl = canvasConMarco.toDataURL("image/png");
 
   const nombreQr = item.dataset.name || "qrcrea-qr";
 

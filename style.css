@@ -976,3 +976,35 @@ html {
   border-radius: 8px;
   padding: 9px 12px;
 }
+.qrResultCard {
+  margin-top: 20px;
+  padding: 22px;
+  text-align: center;
+  background: #f8f7ff;
+  border: 1px solid #ddd9ff;
+  border-radius: 16px;
+}
+
+.qrResultCard h3 {
+  margin: 0 0 18px;
+  font-size: 18px;
+  color: #17172a;
+}
+
+.qrResultCard #qrcode {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto 16px;
+  padding: 10px;
+background: white;
+border: 4px solid #635bff;
+border-radius: 14px;
+width: fit-content;
+}
+
+.qrResultCard p {
+  margin: 0;
+  font-size: 14px;
+  color: #666;
+}
