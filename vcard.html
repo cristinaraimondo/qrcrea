@@ -79,6 +79,7 @@
 </div>
 
 <a id="cardPhone" href="#">📞 Teléfono</a>
+<a id="cardWhatsapp" href="#" target="_blank">💬 WhatsApp</a>
 <a id="cardEmail" href="#">✉️ Correo electrónico</a>
 <a id="cardWebsite" href="#">🌐 Sitio web</a>
 
@@ -123,6 +124,17 @@
     const phone = document.getElementById("cardPhone");
     phone.textContent = "📞 " + (data.phone || "");
     phone.href = `tel:${data.phone || ""}`;
+    const whatsapp = document.getElementById("cardWhatsapp");
+
+if (data.whatsapp) {
+  const numeroWhatsapp = data.whatsapp.replace(/\D/g, "");
+
+  whatsapp.textContent = "💬 WhatsApp";
+  whatsapp.href = `https://wa.me/${numeroWhatsapp}`;
+  whatsapp.style.display = "block";
+} else {
+  whatsapp.style.display = "none";
+}
 
     const email = document.getElementById("cardEmail");
     email.textContent = "✉️ " + (data.email || "");
