@@ -31,9 +31,14 @@ const qrColorInput = document.getElementById("qrColor");
 const vcardFields = document.getElementById("vcardFields");
 
 const qrColorValue = document.getElementById("qrColorValue");
+const vcardColorInput = document.getElementById("vcardColor");
+const vcardColorValue = document.getElementById("vcardColorValue");
 
 qrColorInput.addEventListener("input", () => {
   qrColorValue.textContent = qrColorInput.value.toUpperCase();
+});
+vcardColorInput.addEventListener("input", () => {
+  vcardColorValue.textContent = vcardColorInput.value.toUpperCase();
 });
 const qrBackgroundColorInput = document.getElementById("qrBackgroundColor");
 const qrBackgroundColorValue = document.getElementById("qrBackgroundColorValue");
@@ -200,7 +205,8 @@ if (selectedQrType === "vcard") {
     company: vcardCompany,
     phone: vcardPhone,
     email: vcardEmail,
-    website: vcardWebsite
+    website: vcardWebsite,
+    color: vcardColorInput.value
   };
 }
 

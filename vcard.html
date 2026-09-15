@@ -91,6 +91,11 @@
     }
 
     const data = await response.json();
+    if (data.color) {
+  document.querySelectorAll(".vcard a").forEach(button => {
+    button.style.background = data.color;
+  });
+}
 
     document.getElementById("cardName").textContent =
       data.name || "";
