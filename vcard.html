@@ -88,6 +88,9 @@
 <a id="cardWhatsapp" href="#" target="_blank">💬 WhatsApp</a>
 <a id="cardEmail" href="#">✉️ Correo electrónico</a>
 <a id="cardWebsite" href="#">🌐 Sitio web</a>
+<a id="cardInstagram" href="#" target="_blank">📷 Instagram</a>
+<a id="cardFacebook" href="#" target="_blank">Facebook</a>
+<a id="cardLinkedin" href="#" target="_blank">LinkedIn</a>
 
     <div class="brand">
       Creado con QRcrea
@@ -157,6 +160,30 @@ if (data.whatsapp) {
     const website = document.getElementById("cardWebsite");
     website.textContent = "🌐 " + (data.website || "");
     website.href = data.website || "#";
+
+    const instagram = document.getElementById("cardInstagram");
+if (data.instagram) {
+  instagram.href = data.instagram;
+  instagram.style.display = "block";
+} else {
+  instagram.style.display = "none";
+}
+
+const facebook = document.getElementById("cardFacebook");
+if (data.facebook) {
+  facebook.href = data.facebook;
+  facebook.style.display = "block";
+} else {
+  facebook.style.display = "none";
+}
+
+const linkedin = document.getElementById("cardLinkedin");
+if (data.linkedin) {
+  linkedin.href = data.linkedin;
+  linkedin.style.display = "block";
+} else {
+  linkedin.style.display = "none";
+}
   }
 
   cargarTarjeta();

@@ -160,6 +160,9 @@ const vcardPhone = document.getElementById("vcardPhone").value.trim();
 const vcardWhatsapp = document.getElementById("vcardWhatsapp").value.trim();
 const vcardEmail = document.getElementById("vcardEmail").value.trim();
 const vcardWebsite = document.getElementById("vcardWebsite").value.trim();
+const vcardInstagram = document.getElementById("vcardInstagram").value.trim();
+const vcardFacebook = document.getElementById("vcardFacebook").value.trim();
+const vcardLinkedin = document.getElementById("vcardLinkedin").value.trim();
   const qrFile = document.getElementById("qrFile");
   const archivo = qrFile.files[0];
   const logoArchivo = qrLogoInput.files[0];
@@ -291,6 +294,9 @@ if (selectedQrType === "vcard") {
     whatsapp: vcardWhatsapp,
     email: vcardEmail,
     website: vcardWebsite,
+    instagram: vcardInstagram,
+   facebook: vcardFacebook,
+   linkedin: vcardLinkedin,
     color: vcardColorInput.value,
     photo_path: vcardPhotoPath
   };
