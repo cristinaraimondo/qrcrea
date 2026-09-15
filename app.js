@@ -553,7 +553,13 @@ qrCount.textContent = `${data.length} ${data.length === 1 ? "código guardado" :
   data.forEach(async(qr) => {
     const item = document.createElement("div");
 
-const urlQr = new URL(`q.html?slug=${qr.slug}`, window.location.href).href;
+const paginaQr =
+  qr.type === "vcard" ? "vcard.html" : "q.html";
+
+const urlQr = new URL(
+  `${paginaQr}?slug=${qr.slug}`,
+  window.location.href
+).href;
 item.dataset.name = qr.name;
 item.dataset.qrUrl = urlQr;
 item.dataset.logoPath = qr.logo_path || "";
@@ -564,6 +570,7 @@ const tipoTexto = {
   image: "🖼 Imagen",
   pdf: "📄 PDF",
   audio: "🎵 Audio",
+   vcard: "👤 Tarjeta",
   file: "📁 Archivo"
 };
 
