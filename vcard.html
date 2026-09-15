@@ -65,6 +65,12 @@
       font-size: 13px;
       color: #999;
     }
+    .cardDescription {
+  margin: 0 0 24px;
+  color: #666;
+  line-height: 1.5;
+  font-size: 15px;
+}
   </style>
 </head>
 
@@ -77,7 +83,7 @@
 <div class="company" id="cardCompany">
   Empresa o profesión
 </div>
-
+<p id="cardDescription" class="cardDescription"></p>
 <a id="cardPhone" href="#">📞 Teléfono</a>
 <a id="cardWhatsapp" href="#" target="_blank">💬 WhatsApp</a>
 <a id="cardEmail" href="#">✉️ Correo electrónico</a>
@@ -120,6 +126,14 @@
 
     document.getElementById("cardCompany").textContent =
       data.company || "";
+      const description = document.getElementById("cardDescription");
+
+if (data.description) {
+  description.textContent = data.description;
+  description.style.display = "block";
+} else {
+  description.style.display = "none";
+}
 
     const phone = document.getElementById("cardPhone");
     phone.textContent = "📞 " + (data.phone || "");

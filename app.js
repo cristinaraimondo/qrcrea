@@ -155,6 +155,7 @@ generateBtn.addEventListener("click", async () => {
   const contenido = qrText.value.trim();
   const vcardName = document.getElementById("vcardName").value.trim();
 const vcardCompany = document.getElementById("vcardCompany").value.trim();
+const vcardDescription = document.getElementById("vcardDescription").value.trim();
 const vcardPhone = document.getElementById("vcardPhone").value.trim();
 const vcardWhatsapp = document.getElementById("vcardWhatsapp").value.trim();
 const vcardEmail = document.getElementById("vcardEmail").value.trim();
@@ -285,6 +286,7 @@ if (selectedQrType === "vcard") {
   vcardData = {
     name: vcardName,
     company: vcardCompany,
+     description: vcardDescription,
     phone: vcardPhone,
     whatsapp: vcardWhatsapp,
     email: vcardEmail,
