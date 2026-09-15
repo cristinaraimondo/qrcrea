@@ -418,6 +418,15 @@ async function actualizarSesion() {
   } = await supabaseClient.auth.getUser();
 
   if (user) {
+    const { data: profile, error: profileError } = await supabaseClient
+  .from("profiles")
+  .select("plan")
+  .eq("id", user.id)
+  .single();
+
+const userPlan = profile?.plan || "free";
+
+console.log("Plan del usuario:", userPlan);
   logoutBtn.style.display = "block";
   headerLogoutBtn.style.display = "block";
   loginMessage.textContent = `✅ Sesión iniciada como ${user.email}`;
