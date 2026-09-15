@@ -120,6 +120,10 @@ let selectedQrType = "url";
 
 qrTypeBtns.forEach((btn) => {
   btn.addEventListener("click", () => {
+   if (btn.dataset.type === "vcard" && userPlan !== "premium") {
+  alert("👑 La Tarjeta de presentación es una función Premium.");
+  return;
+}
     selectedQrType = btn.dataset.type;
     qrFileInput.value = "";
     if (selectedQrType === "image") {
@@ -409,7 +413,7 @@ if (hash === "#login") {
   registerCard.style.display = "none";
   loginCard.style.display = "block";
 }
-
+let userPlan = "free";
 
 async function actualizarSesion() {
   
@@ -424,7 +428,7 @@ async function actualizarSesion() {
   .eq("id", user.id)
   .single();
 
-const userPlan = profile?.plan || "free";
+userPlan = profile?.plan || "free";
 
 console.log("Plan del usuario:", userPlan);
   logoutBtn.style.display = "block";
@@ -467,6 +471,7 @@ headerLogoutBtn.addEventListener("click", async () => {
 
   await actualizarSesion();
 });
+
 
 actualizarSesion();
 const myQrs = document.getElementById("myQrs");
