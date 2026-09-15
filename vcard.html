@@ -60,6 +60,7 @@
 <body>
 
   <div class="vcard">
+    <img id="cardPhoto" class="cardPhoto" alt="Foto de perfil">
    <h1 id="cardName">Nombre y apellido</h1>
 
 <div class="company" id="cardCompany">
@@ -91,6 +92,11 @@
     }
 
     const data = await response.json();
+    if (data.photo_url) {
+  const photo = document.getElementById("cardPhoto");
+  photo.src = data.photo_url;
+  photo.style.display = "block";
+}
     if (data.color) {
   document.querySelectorAll(".vcard a").forEach(button => {
     button.style.background = data.color;
