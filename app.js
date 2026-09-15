@@ -203,15 +203,7 @@ if (colorEsDemasiadoClaro(qrColorInput.value)) {
 if (selectedQrType === "vcard") {
   tipoQr = "vcard";
 
-  vcardData = {
-    name: vcardName,
-    company: vcardCompany,
-    phone: vcardPhone,
-    email: vcardEmail,
-    website: vcardWebsite,
-    color: vcardColorInput.value,
-     photo_path: vcardPhotoPath
-  };
+ 
 }
 
 if (archivo) {
@@ -288,7 +280,17 @@ if (vcardPhotoArchivo) {
 
   vcardPhotoPath = rutaFoto;
 }
-
+if (selectedQrType === "vcard") {
+  vcardData = {
+    name: vcardName,
+    company: vcardCompany,
+    phone: vcardPhone,
+    email: vcardEmail,
+    website: vcardWebsite,
+    color: vcardColorInput.value,
+    photo_path: vcardPhotoPath
+  };
+}
   qrContainer.innerHTML = "";
   const qrResultCard = document.getElementById("qrResultCard");
 qrResultCard.style.display = "block";
