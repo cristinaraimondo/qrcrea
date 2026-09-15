@@ -427,6 +427,8 @@ async function actualizarSesion() {
   .select("plan")
   .eq("id", user.id)
   .single();
+  console.log("PROFILE:", profile);
+console.error("ERROR PROFILE:", profileError);
 
 userPlan = profile?.plan || "free";
 
