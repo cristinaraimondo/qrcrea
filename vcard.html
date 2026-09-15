@@ -60,20 +60,59 @@
 <body>
 
   <div class="vcard">
-    <h1>Nombre y apellido</h1>
+   <h1 id="cardName">Nombre y apellido</h1>
 
-    <div class="company">
-      Empresa o profesión
-    </div>
+<div class="company" id="cardCompany">
+  Empresa o profesión
+</div>
 
-    <a href="#">📞 Teléfono</a>
-    <a href="#">✉️ Correo electrónico</a>
-    <a href="#">🌐 Sitio web</a>
+<a id="cardPhone" href="#">📞 Teléfono</a>
+<a id="cardEmail" href="#">✉️ Correo electrónico</a>
+<a id="cardWebsite" href="#">🌐 Sitio web</a>
 
     <div class="brand">
       Creado con QRcrea
     </div>
   </div>
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const slug = params.get("slug");
+
+  async function cargarTarjeta() {
+    if (!slug) return;
+
+    const response = await fetch(
+      `https://srottoudvavudcujvzeb.supabase.co/functions/v1/resolve-qr?slug=${encodeURIComponent(slug)}`
+    );
+
+    if (!response.ok) {
+      console.error("No se pudo cargar la tarjeta.");
+      return;
+    }
+
+    const data = await response.json();
+
+    document.getElementById("cardName").textContent =
+      data.name || "";
+
+    document.getElementById("cardCompany").textContent =
+      data.company || "";
+
+    const phone = document.getElementById("cardPhone");
+    phone.textContent = "📞 " + (data.phone || "");
+    phone.href = `tel:${data.phone || ""}`;
+
+    const email = document.getElementById("cardEmail");
+    email.textContent = "✉️ " + (data.email || "");
+    email.href = `mailto:${data.email || ""}`;
+
+    const website = document.getElementById("cardWebsite");
+    website.textContent = "🌐 " + (data.website || "");
+    website.href = data.website || "#";
+  }
+
+  cargarTarjeta();
+</script>
 
 </body>
 </html>

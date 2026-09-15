@@ -259,7 +259,13 @@ qrResultCard.style.display = "block";
 qrContainer.style.borderColor = qrColorInput.value;
 
 const slug = `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
- const urlPublica = new URL(`q.html?slug=${slug}`, window.location.href).href;
+ const paginaDestino =
+  selectedQrType === "vcard" ? "vcard.html" : "q.html";
+
+const urlPublica = new URL(
+  `${paginaDestino}?slug=${slug}`,
+  window.location.href
+).href;
 
  new QRCode(qrContainer, {
   text: urlPublica,
