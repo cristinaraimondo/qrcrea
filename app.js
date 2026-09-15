@@ -33,6 +33,7 @@ const vcardFields = document.getElementById("vcardFields");
 const qrColorValue = document.getElementById("qrColorValue");
 const vcardColorInput = document.getElementById("vcardColor");
 const vcardColorValue = document.getElementById("vcardColorValue");
+const vcardPhotoInput = document.getElementById("vcardPhoto");
 
 qrColorInput.addEventListener("input", () => {
   qrColorValue.textContent = qrColorInput.value.toUpperCase();
@@ -161,6 +162,8 @@ const vcardWebsite = document.getElementById("vcardWebsite").value.trim();
   const archivo = qrFile.files[0];
   const logoArchivo = qrLogoInput.files[0];
   let logoPath = null;
+  const vcardPhotoArchivo = vcardPhotoInput.files[0];
+let vcardPhotoPath = null;
 
 if (!qrName) {
   alert("Completá el nombre del QR.");
@@ -206,7 +209,8 @@ if (selectedQrType === "vcard") {
     phone: vcardPhone,
     email: vcardEmail,
     website: vcardWebsite,
-    color: vcardColorInput.value
+    color: vcardColorInput.value,
+     photo_path: vcardPhotoPath
   };
 }
 
@@ -257,6 +261,32 @@ if (logoArchivo) {
   }
 
   logoPath = rutaLogo;
+}
+if (vcardPhotoArchivo) {
+
+  if (!vcardPhotoArchivo.type.startsWith("image/")) {
+    alert("La foto de la tarjeta debe ser una imagen.");
+    return;
+  }
+
+  const nombreFotoSeguro =
+    `${Date.now()}-vcard-${vcardPhotoArchivo.name}`;
+
+  const rutaFoto =
+    `${user.id}/${nombreFotoSeguro}`;
+
+  const { error: fotoUploadError } =
+    await supabaseClient.storage
+      .from("user-files")
+      .upload(rutaFoto, vcardPhotoArchivo);
+
+  if (fotoUploadError) {
+    console.error("Error al subir foto de tarjeta:", fotoUploadError);
+    alert("No se pudo subir la foto de la tarjeta.");
+    return;
+  }
+
+  vcardPhotoPath = rutaFoto;
 }
 
   qrContainer.innerHTML = "";
