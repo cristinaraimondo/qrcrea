@@ -27,6 +27,24 @@
       box-shadow: 0 12px 35px rgba(0, 0, 0, 0.12);
       text-align: center;
     }
+    .vcard {
+  position: relative;
+  overflow: hidden;
+}
+
+.vcard::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.55);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.vcard > * {
+  position: relative;
+  z-index: 1;
+}
     .vcard #cardPhoto {
   display: none;
   width: 110px !important;
