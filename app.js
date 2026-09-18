@@ -163,6 +163,7 @@ const vcardEmail = document.getElementById("vcardEmail").value.trim();
 const vcardWebsite = document.getElementById("vcardWebsite").value.trim();
 const vcardInstagram = document.getElementById("vcardInstagram").value.trim();
 const vcardFacebook = document.getElementById("vcardFacebook").value.trim();
+const vcardTiktok = document.getElementById("vcardTiktok").value.trim();
 const vcardLinkedin = document.getElementById("vcardLinkedin").value.trim();
   const qrFile = document.getElementById("qrFile");
   const archivo = qrFile.files[0];
@@ -324,6 +325,7 @@ if (selectedQrType === "vcard") {
     website: vcardWebsite,
     instagram: vcardInstagram,
    facebook: vcardFacebook,
+   tiktok: vcardTiktok,
    linkedin: vcardLinkedin,
     color: vcardColorInput.value,
     photo_path: vcardPhotoPath,
