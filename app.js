@@ -518,6 +518,12 @@ console.error("ERROR PROFILE:", profileError);
 userPlan = profile?.plan || "free";
 
 console.log("Plan del usuario:", userPlan);
+const upgradeProBtn = document.getElementById("upgradeProBtn");
+
+if (upgradeProBtn) {
+  upgradeProBtn.style.display =
+    userPlan === "free" ? "inline-flex" : "none";
+}
   logoutBtn.style.display = "block";
   headerLogoutBtn.style.display = "block";
   loginMessage.textContent = `✅ Sesión iniciada como ${user.email}`;
@@ -954,4 +960,47 @@ ctxMarco.drawImage(canvas, 40, 40, 1000, 1000);
 
 }, 100);
 });
+const upgradeProButton = document.getElementById("upgradeProBtn");
+
+if (upgradeProButton) {
+  upgradeProButton.addEventListener("click", async () => {
+    try {
+      const {
+  data: { user }
+} = await supabaseClient.auth.getUser();
+
+if (!user) {
+  alert("Tenés que iniciar sesión para activar QRcrea PRO.");
+  return;
+}
+      upgradeProButton.disabled = true;
+      upgradeProButton.textContent = "Abriendo Mercado Pago...";
+
+      const { data, error } = await supabaseClient.functions.invoke(
+        "create-pro-subscription",
+        {
+          body: {
+            email: user.email,
+            user_id: user.id
+          }
+        }
+      );
+
+      if (error) throw error;
+
+      if (!data?.init_point) {
+        throw new Error("No se recibió el enlace de Mercado Pago.");
+      }
+
+      window.location.href = data.init_point;
+
+    } catch (error) {
+      console.error(error);
+      alert("No se pudo abrir Mercado Pago. Intentá nuevamente.");
+
+      upgradeProButton.disabled = false;
+      upgradeProButton.textContent = "⭐ Mejorar a PRO";
+    }
+  });
+}
  

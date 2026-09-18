@@ -1112,3 +1112,21 @@ row-gap: 6px;
   font-weight: 800;
   vertical-align: middle;
 }
+#upgradeProBtn {
+  width: auto;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #6557ff, #8b5cf6);
+  color: white;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 0 6px 18px rgba(101, 87, 255, 0.25);
+}
+
+#upgradeProBtn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 22px rgba(101, 87, 255, 0.35);
+}
