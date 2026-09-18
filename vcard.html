@@ -118,6 +118,14 @@
   photo.src = data.photo_url;
   photo.style.display = "block";
 }
+if (data.background_url) {
+  const card = document.querySelector(".vcard");
+
+  card.style.backgroundImage = `url("${data.background_url}")`;
+  card.style.backgroundSize = "cover";
+  card.style.backgroundPosition = "center";
+  card.style.backgroundRepeat = "no-repeat";
+}
     if (data.color) {
   document.querySelectorAll(".vcard a").forEach(button => {
     button.style.background = data.color;

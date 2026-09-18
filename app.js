@@ -34,6 +34,7 @@ const qrColorValue = document.getElementById("qrColorValue");
 const vcardColorInput = document.getElementById("vcardColor");
 const vcardColorValue = document.getElementById("vcardColorValue");
 const vcardPhotoInput = document.getElementById("vcardPhoto");
+const vcardBackgroundInput = document.getElementById("vcardBackground");
 
 qrColorInput.addEventListener("input", () => {
   qrColorValue.textContent = qrColorInput.value.toUpperCase();
@@ -169,6 +170,8 @@ const vcardLinkedin = document.getElementById("vcardLinkedin").value.trim();
   let logoPath = null;
   const vcardPhotoArchivo = vcardPhotoInput.files[0];
 let vcardPhotoPath = null;
+const vcardBackgroundArchivo = vcardBackgroundInput.files[0];
+let vcardBackgroundPath = null;
 
 if (!qrName) {
   alert("Completá el nombre del QR.");
@@ -285,6 +288,31 @@ if (vcardPhotoArchivo) {
 
   vcardPhotoPath = rutaFoto;
 }
+if (vcardBackgroundArchivo) {
+  if (!vcardBackgroundArchivo.type.startsWith("image/")) {
+    alert("El fondo de la tarjeta debe ser una imagen.");
+    return;
+  }
+
+  const nombreFondoSeguro =
+    `${Date.now()}-vcard-background-${vcardBackgroundArchivo.name}`;
+
+  const rutaFondo =
+    `${user.id}/${nombreFondoSeguro}`;
+
+  const { error: fondoUploadError } =
+    await supabaseClient.storage
+      .from("user-files")
+      .upload(rutaFondo, vcardBackgroundArchivo);
+
+  if (fondoUploadError) {
+    console.error("Error al subir fondo de tarjeta:", fondoUploadError);
+    alert("No se pudo subir la imagen de fondo.");
+    return;
+  }
+
+  vcardBackgroundPath = rutaFondo;
+}
 if (selectedQrType === "vcard") {
   vcardData = {
     name: vcardName,
@@ -298,7 +326,8 @@ if (selectedQrType === "vcard") {
    facebook: vcardFacebook,
    linkedin: vcardLinkedin,
     color: vcardColorInput.value,
-    photo_path: vcardPhotoPath
+    photo_path: vcardPhotoPath,
+    background_path: vcardBackgroundPath
   };
 }
   qrContainer.innerHTML = "";
