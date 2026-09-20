@@ -992,9 +992,14 @@ async function iniciarFormularioPro() {
       <input id="form-checkout__cardholderName" type="text" placeholder="Nombre del titular">
       <input id="form-checkout__cardholderEmail" type="email" placeholder="Email">
 
-      <div id="form-checkout__cardNumber"></div>
-      <div id="form-checkout__expirationDate"></div>
-      <div id="form-checkout__securityCode"></div>
+      <label>Número de tarjeta</label>
+<div id="form-checkout__cardNumber"></div>
+
+<label>Vencimiento</label>
+<div id="form-checkout__expirationDate"></div>
+
+<label>Código de seguridad</label>
+<div id="form-checkout__securityCode"></div>
 
       <select id="form-checkout__issuer"></select>
       <select id="form-checkout__installments"></select>
