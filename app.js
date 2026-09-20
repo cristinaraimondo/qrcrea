@@ -984,15 +984,64 @@ if (upgradeProButton) {
   });
 }
 let proCardForm = null;
-
- async function iniciarFormularioPro() {
+async function iniciarFormularioPro() {
   if (proCardForm) return;
 
+  proPaymentContainer.innerHTML = `
+    <form id="form-checkout">
+      <input id="form-checkout__cardholderName" type="text" placeholder="Nombre del titular">
+      <input id="form-checkout__cardholderEmail" type="email" placeholder="Email">
+
+      <div id="form-checkout__cardNumber"></div>
+      <div id="form-checkout__expirationDate"></div>
+      <div id="form-checkout__securityCode"></div>
+
+      <select id="form-checkout__issuer"></select>
+      <select id="form-checkout__installments"></select>
+      <select id="form-checkout__identificationType"></select>
+      <input id="form-checkout__identificationNumber" type="text" placeholder="DNI">
+
+      <button type="submit" id="form-checkout__submit">
+        Suscribirme a QRcrea PRO
+      </button>
+    </form>
+  `;
   proCardForm = mercadoPago.cardForm({
-    amount: "7000",
-    iframe: true,
-    form: {
-      id: "proCardForm",
-    }
-  });
+  amount: "7000",
+  iframe: true,
+  form: {
+    id: "form-checkout",
+    cardholderName: {
+      id: "form-checkout__cardholderName",
+    },
+    cardholderEmail: {
+      id: "form-checkout__cardholderEmail",
+    },
+    cardNumber: {
+      id: "form-checkout__cardNumber",
+    },
+    expirationDate: {
+      id: "form-checkout__expirationDate",
+    },
+    securityCode: {
+      id: "form-checkout__securityCode",
+    },
+    installments: {
+      id: "form-checkout__installments",
+    },
+    identificationType: {
+      id: "form-checkout__identificationType",
+    },
+    identificationNumber: {
+      id: "form-checkout__identificationNumber",
+    },
+    issuer: {
+      id: "form-checkout__issuer",
+    },
+    submit: {
+      id: "form-checkout__submit",
+    },
+  },
+});
 }
+
