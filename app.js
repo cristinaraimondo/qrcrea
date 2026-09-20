@@ -1050,6 +1050,10 @@ async function iniciarFormularioPro() {
 
   console.log("Formulario Mercado Pago cargado correctamente");
 },
+onSubmit: (event) => {
+  event.preventDefault();
+  console.log("Formulario enviado");
+},
 });
 
 }
