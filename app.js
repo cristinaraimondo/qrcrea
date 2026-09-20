@@ -5,6 +5,12 @@ const supabaseClient = supabase.createClient(
   SUPABASE_URL,
   SUPABASE_KEY
 );
+const mercadoPago = new MercadoPago(
+  "APP_USR-02070554-b86b-45ec-948f-311c413146be",
+  {
+    locale: "es-AR"
+  }
+);
 async function probarConexion() {
   const { data, error } = await supabaseClient
     .from("qr_codes")
@@ -961,46 +967,32 @@ ctxMarco.drawImage(canvas, 40, 40, 1000, 1000);
 }, 100);
 });
 const upgradeProButton = document.getElementById("upgradeProBtn");
-
+const proPaymentContainer = document.getElementById("proPaymentContainer");
 if (upgradeProButton) {
   upgradeProButton.addEventListener("click", async () => {
-    try {
-      const {
-  data: { user }
-} = await supabaseClient.auth.getUser();
+    const {
+      data: { user }
+    } = await supabaseClient.auth.getUser();
 
-if (!user) {
-  alert("Tenés que iniciar sesión para activar QRcrea PRO.");
-  return;
+    if (!user) {
+      alert("Tenés que iniciar sesión para activar QRcrea PRO.");
+      return;
+    }
+
+    proPaymentContainer.style.display = "block";
+    await iniciarFormularioPro();
+  });
 }
-      upgradeProButton.disabled = true;
-      upgradeProButton.textContent = "Abriendo Mercado Pago...";
+let proCardForm = null;
 
-      const { data, error } = await supabaseClient.functions.invoke(
-        "create-pro-subscription",
-        {
-          body: {
-            email: user.email,
-            user_id: user.id
-          }
-        }
-      );
+ async function iniciarFormularioPro() {
+  if (proCardForm) return;
 
-      if (error) throw error;
-
-      if (!data?.init_point) {
-        throw new Error("No se recibió el enlace de Mercado Pago.");
-      }
-
-      window.location.href = data.init_point;
-
-    } catch (error) {
-      console.error(error);
-      alert("No se pudo abrir Mercado Pago. Intentá nuevamente.");
-
-      upgradeProButton.disabled = false;
-      upgradeProButton.textContent = "⭐ Mejorar a PRO";
+  proCardForm = mercadoPago.cardForm({
+    amount: "7000",
+    iframe: true,
+    form: {
+      id: "proCardForm",
     }
   });
 }
- 
