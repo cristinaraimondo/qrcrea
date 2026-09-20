@@ -1130,3 +1130,24 @@ row-gap: 6px;
   transform: translateY(-1px);
   box-shadow: 0 8px 22px rgba(101, 87, 255, 0.35);
 }
+#proPaymentContainer {
+  width: 100%;
+  max-width: 520px;
+  margin: 20px auto;
+}
+
+#form-checkout {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+#form-checkout__cardNumber,
+#form-checkout__expirationDate,
+#form-checkout__securityCode {
+  height: 48px;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  padding: 0 12px;
+  background: #fff;
+}
