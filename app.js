@@ -968,6 +968,13 @@ ctxMarco.drawImage(canvas, 40, 40, 1000, 1000);
 });
 const upgradeProButton = document.getElementById("upgradeProBtn");
 const proPaymentContainer = document.getElementById("proPaymentContainer");
+const closeProPayment = document.getElementById("closeProPayment");
+
+if (closeProPayment) {
+  closeProPayment.addEventListener("click", () => {
+    proPaymentContainer.style.display = "none";
+  });
+}
 if (upgradeProButton) {
   upgradeProButton.addEventListener("click", async () => {
     const {

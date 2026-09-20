@@ -22,14 +22,22 @@ button<!DOCTYPE html>
   <button id="upgradeProBtn" type="button" style="display:none;">
   ⭐ Mejorar a PRO
 </button>
-<div id="proPaymentContainer" style="display:none;">
-  <div id="proCardForm"></div>
-</div>
+
   <button id="headerLogoutBtn" style="display:none;">
   Cerrar sesión
 </button>
 </header>
+<div id="proPaymentContainer" class="proPaymentOverlay" style="display:none;">
+  <div class="proPaymentModal">
+    <button type="button" id="closeProPayment" class="proPaymentClose">×</button>
 
+    <h2>QRcrea PRO</h2>
+    <p class="proPaymentPrice">$7.000 / mes</p>
+    <p class="proPaymentText">Completá tus datos para activar tu suscripción.</p>
+
+    <div id="proCardForm"></div>
+  </div>
+</div>
   <main>
    <section class="card" id="registerCard">
     <span id="registro"></span>
