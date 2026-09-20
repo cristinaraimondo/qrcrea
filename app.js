@@ -1064,10 +1064,67 @@ async function iniciarFormularioPro() {
       console.log("Formulario Mercado Pago cargado correctamente");
     },
 
-    onSubmit: (event) => {
-      event.preventDefault();
-      console.log("Formulario enviado");
-    },
+   onSubmit: async (event) => {
+  event.preventDefault();
+
+  try {
+    const formData = proCardForm.getCardFormData();
+
+    if (!formData.token) {
+      alert("Revisá los datos de la tarjeta.");
+      return;
+    }
+
+    const {
+      data: { user }
+    } = await supabaseClient.auth.getUser();
+
+    if (!user) {
+      alert("Tu sesión venció. Volvé a iniciar sesión.");
+      return;
+    }
+
+    const submitButton =
+      document.getElementById("form-checkout__submit");
+
+    submitButton.disabled = true;
+    submitButton.textContent = "Procesando...";
+
+    const { data, error } = await supabaseClient.functions.invoke(
+      "create-pro-subscription",
+      {
+        body: {
+          card_token_id: formData.token,
+          email: user.email,
+          user_id: user.id
+        }
+      }
+    );
+
+    if (error) throw error;
+
+    if (!data?.success) {
+      throw new Error("Mercado Pago no pudo crear la suscripción.");
+    }
+
+    alert("¡QRcrea PRO activado correctamente!");
+
+    window.location.reload();
+
+  } catch (error) {
+    console.error("Error activando PRO:", error);
+    alert("No se pudo activar QRcrea PRO. Revisá los datos e intentá nuevamente.");
+
+    const submitButton =
+      document.getElementById("form-checkout__submit");
+
+    if (submitButton) {
+      submitButton.disabled = false;
+      submitButton.textContent = "Suscribirme a QRcrea PRO";
+    }
+  }
+},
+
   },
 });
 
