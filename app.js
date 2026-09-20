@@ -1095,7 +1095,7 @@ async function iniciarFormularioPro() {
       {
         body: {
           card_token_id: formData.token,
-          email: user.email,
+          email: document.getElementById("form-checkout__cardholderEmail").value.trim(),
           user_id: user.id
         }
       }
