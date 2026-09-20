@@ -1042,18 +1042,21 @@ async function iniciarFormularioPro() {
       id: "form-checkout__submit",
     },
   },
-  onFormMounted: (error) => {
-  if (error) {
-    console.error("Error al montar Mercado Pago:", error);
-    return;
-  }
+    callbacks: {
+    onFormMounted: (error) => {
+      if (error) {
+        console.error("Error al montar Mercado Pago:", error);
+        return;
+      }
 
-  console.log("Formulario Mercado Pago cargado correctamente");
-},
-onSubmit: (event) => {
-  event.preventDefault();
-  console.log("Formulario enviado");
-},
+      console.log("Formulario Mercado Pago cargado correctamente");
+    },
+
+    onSubmit: (event) => {
+      event.preventDefault();
+      console.log("Formulario enviado");
+    },
+  },
 });
 
 }
