@@ -1036,15 +1036,18 @@ async function iniciarFormularioPro() {
     cardholderEmail: {
       id: "form-checkout__cardholderEmail",
     },
-    cardNumber: {
-      id: "form-checkout__cardNumber",
-    },
-    expirationDate: {
-      id: "form-checkout__expirationDate",
-    },
-    securityCode: {
-      id: "form-checkout__securityCode",
-    },
+   cardNumber: {
+  id: "form-checkout__cardNumber",
+  placeholder: "Número de tarjeta",
+},
+expirationDate: {
+  id: "form-checkout__expirationDate",
+  placeholder: "MM/YY",
+},
+   securityCode: {
+  id: "form-checkout__securityCode",
+  placeholder: "Código de seguridad",
+},
     installments: {
       id: "form-checkout__installments",
     },
