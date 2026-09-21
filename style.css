@@ -1139,7 +1139,7 @@ row-gap: 6px;
 #form-checkout {
   display: flex;
   flex-direction: column;
-  gap: 9px;
+  gap: 4px;
 }
 
 #form-checkout__cardNumber,
@@ -1150,6 +1150,40 @@ row-gap: 6px;
   border-radius: 10px;
   padding: 0 12px;
   background: #fff;
+}
+#form-checkout input,
+#form-checkout select {
+  height: 42px;
+  padding: 0 12px;
+  font-size: 15px;
+  border-radius: 9px;
+}
+
+#form-checkout__cardNumber,
+#form-checkout__expirationDate,
+#form-checkout__securityCode {
+  height: 42px;
+}
+
+#form-checkout label {
+  margin: 2px 0 0;
+  font-size: 14px;
+}
+#form-checkout__submit {
+  margin-top: 10px;
+  width: 100%;
+  padding: 14px 18px;
+  border: none;
+  border-radius: 12px;
+  background: #6557ff;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+#form-checkout__submit:hover {
+  background: #5546e8;
 }
 .proPaymentOverlay {
   position: fixed;
@@ -1213,4 +1247,31 @@ row-gap: 6px;
 }
 .proPaymentClose:hover {
   background: #e8e3ff;
+}
+.proCardRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.proCardRow > div {
+  min-width: 0;
+}
+
+.proCardRow #form-checkout__expirationDate,
+.proCardRow #form-checkout__securityCode {
+  width: 100%;
+  box-sizing: border-box;
+}
+#form-checkout input {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+#form-checkout {
+  gap: 6px;
+}
+
+#form-checkout > input {
+  margin: 0;
 }

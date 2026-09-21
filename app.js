@@ -1003,11 +1003,17 @@ async function iniciarFormularioPro() {
       <label>Número de tarjeta</label>
 <div id="form-checkout__cardNumber"></div>
 
-<label>Vencimiento</label>
-<div id="form-checkout__expirationDate"></div>
+<div class="proCardRow">
+  <div>
+    <label>Vencimiento</label>
+    <div id="form-checkout__expirationDate"></div>
+  </div>
 
-<label>Código de seguridad</label>
-<div id="form-checkout__securityCode"></div>
+  <div>
+    <label>Código de seguridad</label>
+    <div id="form-checkout__securityCode"></div>
+  </div>
+</div>
 
       <select id="form-checkout__issuer"></select>
       <select id="form-checkout__installments"></select>
