@@ -987,7 +987,7 @@ if (upgradeProButton) {
       return;
     }
 
-    proPaymentContainer.style.display = "block";
+    proPaymentContainer.style.display = "flex";
     await iniciarFormularioPro();
   });
 }
@@ -995,7 +995,7 @@ let proCardForm = null;
 async function iniciarFormularioPro() {
   if (proCardForm) return;
 
-  proPaymentContainer.innerHTML = `
+ document.getElementById("proCardForm").innerHTML = `
     <form id="form-checkout">
       <input id="form-checkout__cardholderName" type="text" placeholder="Nombre del titular">
       <input id="form-checkout__cardholderEmail" type="email" placeholder="Email">
