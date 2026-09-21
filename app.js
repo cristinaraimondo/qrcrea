@@ -513,6 +513,7 @@ async function actualizarSesion() {
   } = await supabaseClient.auth.getUser();
 
   if (user) {
+    await supabaseClient.functions.invoke("check-pro-subscription");
     const { data: profile, error: profileError } = await supabaseClient
   .from("profiles")
   .select("plan")
