@@ -6,7 +6,7 @@ const supabaseClient = supabase.createClient(
   SUPABASE_KEY
 );
 const mercadoPago = new MercadoPago(
-  "APP_USR-02070554-b86b-45ec-948f-311c413146be",
+  "APP_USR-b933dc01-8f7b-49af-8eff-eba314067a41",
   {
     locale: "es-AR"
   }
