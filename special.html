@@ -127,6 +127,33 @@
     .custom {
       background-color: #f5f3ff;
     }
+    .effectsLayer {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.confetti {
+  position: absolute;
+  top: -20px;
+  width: 9px;
+  height: 15px;
+  border-radius: 3px;
+  opacity: 0.8;
+  animation: confettiFall linear forwards;
+}
+
+@keyframes confettiFall {
+  0% {
+    transform: translateY(-20px) rotate(0deg);
+  }
+
+  100% {
+    transform: translateY(110vh) rotate(720deg);
+  }
+}
 
     @media (max-width: 520px) {
       body {
@@ -149,6 +176,7 @@
 </head>
 
 <body>
+    <div id="effectsLayer" class="effectsLayer"></div>
 
   <main class="specialCard" id="specialCard">
 
@@ -193,6 +221,42 @@
 
 const params = new URLSearchParams(window.location.search);
 const slug = params.get("slug");
+function iniciarConfeti() {
+
+  const layer = document.getElementById("effectsLayer");
+
+  const colores = [
+    "#635bff",
+    "#ff4d8d",
+    "#ffd54a",
+    "#36cfc9",
+    "#ff8a3d"
+  ];
+
+  for (let i = 0; i < 45; i++) {
+
+    const confetti = document.createElement("span");
+    confetti.className = "confetti";
+
+    confetti.style.left =
+      Math.random() * 100 + "vw";
+
+    confetti.style.backgroundColor =
+      colores[Math.floor(Math.random() * colores.length)];
+
+    confetti.style.animationDuration =
+      (3 + Math.random() * 4) + "s";
+
+    confetti.style.animationDelay =
+      (Math.random() * 3) + "s";
+
+    layer.appendChild(confetti);
+
+    setTimeout(() => {
+      confetti.remove();
+    }, 8000);
+  }
+}
 
 async function cargarTarjetaEspecial() {
 
@@ -217,6 +281,9 @@ async function cargarTarjetaEspecial() {
     const template = data.template || "custom";
 
     card.classList.add(template);
+    if (template === "birthday") {
+ iniciarConfeti();
+}
 
 
     // ICONO SEGÚN TIPO
