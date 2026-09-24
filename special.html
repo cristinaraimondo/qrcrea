@@ -250,6 +250,27 @@
   border-radius: 30px;
   letter-spacing: 0.4px;
 }
+/* Brillos de invitación */
+
+.sparkle {
+  position: absolute;
+  color: #c4a7ff;
+  pointer-events: none;
+  z-index: 10;
+  animation: sparkleGlow 2.2s ease-in-out infinite;
+}
+
+@keyframes sparkleGlow {
+  0%, 100% {
+    opacity: 0;
+    transform: scale(0.5) rotate(0deg);
+  }
+
+  50% {
+    opacity: 0.9;
+    transform: scale(1.2) rotate(20deg);
+  }
+}
 
     @media (max-width: 520px) {
       body {
@@ -385,6 +406,35 @@ function iniciarNieve() {
     }, 11000);
   }
 }
+function iniciarBrillos() {
+
+  const layer = document.getElementById("effectsLayer");
+
+  for (let i = 0; i < 22; i++) {
+
+    const sparkle = document.createElement("span");
+
+    sparkle.className = "sparkle";
+    sparkle.textContent = Math.random() > 0.5 ? "✦" : "✧";
+
+    sparkle.style.left =
+      (5 + Math.random() * 90) + "vw";
+
+    sparkle.style.top =
+      (5 + Math.random() * 90) + "vh";
+
+    sparkle.style.fontSize =
+      (10 + Math.random() * 16) + "px";
+
+    sparkle.style.animationDelay =
+      (Math.random() * 3) + "s";
+
+    sparkle.style.animationDuration =
+      (1.5 + Math.random() * 2) + "s";
+
+    layer.appendChild(sparkle);
+  }
+}
 
 async function cargarTarjetaEspecial() {
 
@@ -415,7 +465,9 @@ async function cargarTarjetaEspecial() {
 if (template === "christmas") {
   iniciarNieve();
 }
-
+if (template === "invitation") {
+  iniciarBrillos();
+}
 
     // ICONO SEGÚN TIPO
 
