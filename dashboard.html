@@ -108,6 +108,9 @@
 <button type="button" class="qrTypeBtn" data-type="vcard">
   👤 Tarjeta <span class="premiumBadge">PRO</span>
 </button>
+<button type="button" class="qrTypeBtn" data-type="special">
+  🎁 Tarjeta especial <span class="premiumBadge">PRO</span>
+</button>
 </div>
       <input
   type="text"
@@ -216,6 +219,71 @@
 
   <span id="qrBackgroundColorValue">#FFFFFF</span>
 </div>
+</div>
+<!-- TARJETA ESPECIAL PRO -->
+<div id="specialFields" style="display:none;">
+
+  <label for="specialTemplate">Tipo de tarjeta</label>
+  <select id="specialTemplate">
+    <option value="birthday">🎂 Cumpleaños</option>
+    <option value="christmas">🎄 Navidad</option>
+    <option value="invitation">💌 Invitación</option>
+    <option value="custom">✨ Personalizada</option>
+  </select>
+
+  <input
+    type="text"
+    id="specialTitle"
+    placeholder="Título (ej: ¡Feliz cumpleaños, Sofía!)"
+  >
+
+  <textarea
+    id="specialMessage"
+    placeholder="Escribí tu mensaje..."
+    maxlength="1000"
+    rows="5"
+  ></textarea>
+
+  <label for="specialImage">Foto o imagen principal</label>
+  <input
+    type="file"
+    id="specialImage"
+    accept="image/png,image/jpeg,image/webp"
+  >
+
+  <label for="specialBackground">Imagen de fondo (opcional)</label>
+  <input
+    type="file"
+    id="specialBackground"
+    accept="image/png,image/jpeg,image/webp"
+  >
+
+  <label for="specialMusic">Música (opcional)</label>
+  <input
+    type="file"
+    id="specialMusic"
+    accept="audio/*"
+  >
+
+  <input
+    type="text"
+    id="specialButtonText"
+    placeholder="Texto del botón (opcional)"
+  >
+
+  <input
+    type="url"
+    id="specialButtonUrl"
+    placeholder="Enlace del botón (opcional)"
+  >
+
+  <label for="specialColor">Color principal</label>
+
+  <div class="qrColorControl">
+    <input type="color" id="specialColor" value="#635bff">
+    <span id="specialColorValue">#635BFF</span>
+  </div>
+
 </div>
       <button id="generateBtn">
         Generar QR

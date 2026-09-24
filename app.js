@@ -35,6 +35,9 @@ const qrCount = document.getElementById("qrCount");
 const qrLogoInput = document.getElementById("qrLogo");
 const qrColorInput = document.getElementById("qrColor");
 const vcardFields = document.getElementById("vcardFields");
+const specialFields = document.getElementById("specialFields");
+const specialColorInput = document.getElementById("specialColor");
+const specialColorValue = document.getElementById("specialColorValue");
 
 const qrColorValue = document.getElementById("qrColorValue");
 const vcardColorInput = document.getElementById("vcardColor");
@@ -47,6 +50,9 @@ qrColorInput.addEventListener("input", () => {
 });
 vcardColorInput.addEventListener("input", () => {
   vcardColorValue.textContent = vcardColorInput.value.toUpperCase();
+});
+specialColorInput.addEventListener("input", () => {
+  specialColorValue.textContent = specialColorInput.value.toUpperCase();
 });
 const qrBackgroundColorInput = document.getElementById("qrBackgroundColor");
 const qrBackgroundColorValue = document.getElementById("qrBackgroundColorValue");
@@ -94,47 +100,56 @@ qrSearch.addEventListener("input", () => {
 let selectedQrType = "url";
 
   function actualizarTipoQr() {
-  if (selectedQrType === "url") {
-    qrText.style.display = "block";
-    qrFileInput.style.display = "none";
-    qrText.placeholder = "https://tusitio.com";
-  } else {
-    qrText.style.display = "none";
-    qrFileInput.style.display = "block";
 
-    if (selectedQrType === "image") {
-      qrFileInput.title = "Seleccioná una imagen";
-       qrFileInput.setAttribute("aria-label", "Seleccioná una imagen");
-    } else if (selectedQrType === "pdf") {
-      qrFileInput.title = "Seleccioná un archivo PDF";
-       qrFileInput.setAttribute("aria-label", "Seleccioná un archivo PDF");
-    } else if (selectedQrType === "audio") {
-      qrFileInput.title = "Seleccioná un archivo de audio";
-      qrFileInput.setAttribute("aria-label", "Seleccioná un archivo de audio");
-    }
-    if (selectedQrType === "vcard") {
-  vcardFields.style.display = "block";
+
+  // Ocultamos todos los campos especiales
+  vcardFields.style.display = "none";
+  specialFields.style.display = "none";
   qrText.style.display = "none";
   qrFileInput.style.display = "none";
-} else {
-  vcardFields.style.display = "none";
 
+  // ENLACE
   if (selectedQrType === "url") {
     qrText.style.display = "block";
-    qrFileInput.style.display = "none";
-  } else {
-    qrText.style.display = "none";
+    qrText.placeholder = "https://tusitio.com";
+  }
+
+  // ARCHIVOS
+  else if (selectedQrType === "image") {
     qrFileInput.style.display = "block";
+    qrFileInput.accept = "image/*";
+  }
+
+  else if (selectedQrType === "pdf") {
+    qrFileInput.style.display = "block";
+    qrFileInput.accept = "application/pdf";
+  }
+
+  else if (selectedQrType === "audio") {
+    qrFileInput.style.display = "block";
+    qrFileInput.accept = "audio/*";
+  }
+
+  // TARJETA DE PRESENTACIÓN PRO
+  else if (selectedQrType === "vcard") {
+    vcardFields.style.display = "block";
+  }
+
+  // TARJETA ESPECIAL PRO
+  else if (selectedQrType === "special") {
+    specialFields.style.display = "block";
   }
 }
-  }
-}
+
 
 
 qrTypeBtns.forEach((btn) => {
   btn.addEventListener("click", () => {
-   if (btn.dataset.type === "vcard" && userPlan !== "premium") {
-  alert("👑 La Tarjeta de presentación es una función Premium.");
+  if (
+  (btn.dataset.type === "vcard" || btn.dataset.type === "special") &&
+  userPlan !== "premium"
+) {
+  alert("👑 Esta función es exclusiva de QRcrea PRO.");
   return;
 }
     selectedQrType = btn.dataset.type;
@@ -171,6 +186,24 @@ const vcardInstagram = document.getElementById("vcardInstagram").value.trim();
 const vcardFacebook = document.getElementById("vcardFacebook").value.trim();
 const vcardTiktok = document.getElementById("vcardTiktok").value.trim();
 const vcardLinkedin = document.getElementById("vcardLinkedin").value.trim();
+const specialTemplate = document.getElementById("specialTemplate").value;
+const specialTitle = document.getElementById("specialTitle").value.trim();
+const specialMessage = document.getElementById("specialMessage").value.trim();
+const specialButtonText = document.getElementById("specialButtonText").value.trim();
+const specialButtonUrl = document.getElementById("specialButtonUrl").value.trim();
+
+const specialImageArchivo =
+  document.getElementById("specialImage").files[0];
+
+const specialBackgroundArchivo =
+  document.getElementById("specialBackground").files[0];
+
+const specialMusicArchivo =
+  document.getElementById("specialMusic").files[0];
+
+let specialImagePath = null;
+let specialBackgroundPath = null;
+let specialMusicPath = null;
   const qrFile = document.getElementById("qrFile");
   const archivo = qrFile.files[0];
   const logoArchivo = qrLogoInput.files[0];
@@ -193,8 +226,17 @@ if (selectedQrType === "vcard" && !vcardName) {
   alert("Completá el nombre de la tarjeta.");
   return;
 }
+if (selectedQrType === "special" && !specialTitle) {
+  alert("Completá el título de la tarjeta.");
+  return;
+}
 
-if (selectedQrType !== "url" && selectedQrType !== "vcard" && !archivo) {
+if (
+  selectedQrType !== "url" &&
+  selectedQrType !== "vcard" &&
+  selectedQrType !== "special" &&
+  !archivo
+) {
   alert("Seleccioná el archivo correspondiente.");
   return;
 }
@@ -219,6 +261,9 @@ if (selectedQrType === "vcard") {
   tipoQr = "vcard";
 
  
+}
+if (selectedQrType === "special") {
+  tipoQr = "special";
 }
 
 if (archivo) {
@@ -320,6 +365,95 @@ if (vcardBackgroundArchivo) {
 
   vcardBackgroundPath = rutaFondo;
 }
+// ===============================
+// ARCHIVOS TARJETA ESPECIAL PRO
+// ===============================
+
+// Imagen principal
+if (specialImageArchivo) {
+
+  if (!specialImageArchivo.type.startsWith("image/")) {
+    alert("La imagen principal debe ser una imagen.");
+    return;
+  }
+
+  const nombreImagen =
+    `${Date.now()}-special-image-${specialImageArchivo.name}`;
+
+  const rutaImagen =
+    `${user.id}/${nombreImagen}`;
+
+  const { error: imagenError } =
+    await supabaseClient.storage
+      .from("user-files")
+      .upload(rutaImagen, specialImageArchivo);
+
+  if (imagenError) {
+    console.error("Error al subir imagen:", imagenError);
+    alert("No se pudo subir la imagen principal.");
+    return;
+  }
+
+  specialImagePath = rutaImagen;
+}
+
+
+// Imagen de fondo
+if (specialBackgroundArchivo) {
+
+  if (!specialBackgroundArchivo.type.startsWith("image/")) {
+    alert("El fondo debe ser una imagen.");
+    return;
+  }
+
+  const nombreFondo =
+    `${Date.now()}-special-background-${specialBackgroundArchivo.name}`;
+
+  const rutaFondo =
+    `${user.id}/${nombreFondo}`;
+
+  const { error: fondoError } =
+    await supabaseClient.storage
+      .from("user-files")
+      .upload(rutaFondo, specialBackgroundArchivo);
+
+  if (fondoError) {
+    console.error("Error al subir fondo:", fondoError);
+    alert("No se pudo subir la imagen de fondo.");
+    return;
+  }
+
+  specialBackgroundPath = rutaFondo;
+}
+
+
+// Música
+if (specialMusicArchivo) {
+
+  if (!specialMusicArchivo.type.startsWith("audio/")) {
+    alert("El archivo de música debe ser un audio.");
+    return;
+  }
+
+  const nombreMusica =
+    `${Date.now()}-special-music-${specialMusicArchivo.name}`;
+
+  const rutaMusica =
+    `${user.id}/${nombreMusica}`;
+
+  const { error: musicaError } =
+    await supabaseClient.storage
+      .from("user-files")
+      .upload(rutaMusica, specialMusicArchivo);
+
+  if (musicaError) {
+    console.error("Error al subir música:", musicaError);
+    alert("No se pudo subir la música.");
+    return;
+  }
+
+  specialMusicPath = rutaMusica;
+}
 if (selectedQrType === "vcard") {
   vcardData = {
     name: vcardName,
@@ -338,14 +472,34 @@ if (selectedQrType === "vcard") {
     background_path: vcardBackgroundPath
   };
 }
+if (selectedQrType === "special") {
+  vcardData = {
+    template: specialTemplate,
+    title: specialTitle,
+    message: specialMessage,
+    button_text: specialButtonText,
+    button_url: specialButtonUrl,
+    color: specialColorInput.value,
+    image_path: specialImagePath,
+    background_path: specialBackgroundPath,
+    music_path: specialMusicPath
+  };
+}
   qrContainer.innerHTML = "";
   const qrResultCard = document.getElementById("qrResultCard");
 qrResultCard.style.display = "block";
 qrContainer.style.borderColor = qrColorInput.value;
 
 const slug = `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
- const paginaDestino =
-  selectedQrType === "vcard" ? "vcard.html" : "q.html";
+let paginaDestino = "q.html";
+
+if (selectedQrType === "vcard") {
+  paginaDestino = "vcard.html";
+}
+
+if (selectedQrType === "special") {
+  paginaDestino = "special.html";
+}
 
 const urlPublica = new URL(
   `${paginaDestino}?slug=${slug}`,
@@ -607,8 +761,15 @@ qrCount.textContent = `${data.length} ${data.length === 1 ? "código guardado" :
   data.forEach(async(qr) => {
     const item = document.createElement("div");
 
-const paginaQr =
-  qr.type === "vcard" ? "vcard.html" : "q.html";
+let paginaQr = "q.html";
+
+if (qr.type === "vcard") {
+  paginaQr = "vcard.html";
+}
+
+if (qr.type === "special") {
+  paginaQr = "special.html";
+}
 
 const urlQr = new URL(
   `${paginaQr}?slug=${qr.slug}`,
@@ -624,7 +785,8 @@ const tipoTexto = {
   image: "🖼 Imagen",
   pdf: "📄 PDF",
   audio: "🎵 Audio",
-   vcard: "👤 Tarjeta",
+  vcard: "👤 Tarjeta",
+  special: "🎁 Tarjeta especial",
   file: "📁 Archivo"
 };
 

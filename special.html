@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tarjeta especial | QRcrea</title>
+  <link rel="icon" type="image/png" href="favicon.png">
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Arial, sans-serif;
+      background: #f4f3ff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .specialCard {
+      width: 100%;
+      max-width: 480px;
+      min-height: 620px;
+      background: #ffffff;
+      border-radius: 28px;
+      box-shadow: 0 18px 50px rgba(0,0,0,.14);
+      overflow: hidden;
+      position: relative;
+      text-align: center;
+      padding: 38px 28px 26px;
+      background-size: cover;
+      background-position: center;
+    }
+
+    .overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(255,255,255,.78);
+      z-index: 0;
+    }
+
+    .content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .occasionIcon {
+      font-size: 52px;
+      margin-bottom: 12px;
+    }
+
+    h1 {
+      margin: 0 0 18px;
+      font-size: 34px;
+      line-height: 1.15;
+      color: #1f2937;
+    }
+
+    .message {
+      font-size: 18px;
+      line-height: 1.6;
+      color: #374151;
+      white-space: pre-line;
+      margin: 0 auto 24px;
+    }
+
+    .mainImage {
+      display: none;
+      width: 100%;
+      max-height: 300px;
+      object-fit: cover;
+      border-radius: 20px;
+      margin: 0 auto 24px;
+      box-shadow: 0 8px 24px rgba(0,0,0,.12);
+    }
+
+    .specialButton {
+      display: none;
+      width: 100%;
+      padding: 15px 20px;
+      border-radius: 14px;
+      text-decoration: none;
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 16px;
+      margin-top: 18px;
+    }
+
+    .musicBox {
+      display: none;
+      margin-top: 22px;
+    }
+
+    audio {
+      width: 100%;
+    }
+
+    .brand {
+      position: relative;
+      z-index: 1;
+      margin-top: 30px;
+      font-size: 12px;
+      color: #64748b;
+    }
+
+    /* Cumpleaños */
+    .birthday {
+      background-color: #fff7ed;
+    }
+
+    /* Navidad */
+    .christmas {
+      background-color: #f0fdf4;
+    }
+
+    /* Invitación */
+    .invitation {
+      background-color: #fdf4ff;
+    }
+
+    /* Personalizada */
+    .custom {
+      background-color: #f5f3ff;
+    }
+
+    @media (max-width: 520px) {
+      body {
+        padding: 0;
+        align-items: stretch;
+      }
+
+      .specialCard {
+        max-width: none;
+        min-height: 100vh;
+        border-radius: 0;
+        padding: 34px 22px 24px;
+      }
+
+      h1 {
+        font-size: 30px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <main class="specialCard" id="specialCard">
+
+    <div class="overlay"></div>
+
+    <div class="content">
+
+      <div class="occasionIcon" id="occasionIcon">✨</div>
+
+      <h1 id="specialTitle"></h1>
+
+      <img
+        id="specialImage"
+        class="mainImage"
+        alt="Imagen de la tarjeta"
+      >
+
+      <p id="specialMessage" class="message"></p>
+
+      <a
+        id="specialButton"
+        class="specialButton"
+        href="#"
+        target="_blank"
+        rel="noopener noreferrer"
+      ></a>
+
+      <div id="musicBox" class="musicBox">
+        <audio id="specialMusic" controls></audio>
+      </div>
+
+    </div>
+
+    <div class="brand">
+      Creado con QRcrea
+    </div>
+
+  </main>
+
+
+<script>
+
+const params = new URLSearchParams(window.location.search);
+const slug = params.get("slug");
+
+async function cargarTarjetaEspecial() {
+
+  if (!slug) return;
+
+  try {
+
+    const response = await fetch(
+      `https://srottoudvavudcujvzeb.supabase.co/functions/v1/resolve-qr?slug=${encodeURIComponent(slug)}`
+    );
+
+    if (!response.ok) {
+      console.error("No se pudo cargar la tarjeta.");
+      return;
+    }
+
+    const data = await response.json();
+
+    const card = document.getElementById("specialCard");
+    const icon = document.getElementById("occasionIcon");
+
+    const template = data.template || "custom";
+
+    card.classList.add(template);
+
+
+    // ICONO SEGÚN TIPO
+
+    const icons = {
+      birthday: "🎂",
+      christmas: "🎄",
+      invitation: "💌",
+      custom: "✨"
+    };
+
+    icon.textContent = icons[template] || "✨";
+
+
+    // TÍTULO
+
+    document.getElementById("specialTitle").textContent =
+      data.title || "";
+
+
+    // MENSAJE
+
+    const message =
+      document.getElementById("specialMessage");
+
+    if (data.message) {
+      message.textContent = data.message;
+    } else {
+      message.style.display = "none";
+    }
+
+
+    // COLOR PRINCIPAL
+
+    const color = data.color || "#635bff";
+
+    document.getElementById("specialTitle").style.color =
+      color;
+
+
+    // IMAGEN PRINCIPAL
+
+    const image =
+      document.getElementById("specialImage");
+
+    if (data.image_url) {
+      image.src = data.image_url;
+      image.style.display = "block";
+    }
+
+
+    // FONDO
+
+    if (data.background_url) {
+      card.style.backgroundImage =
+        `url("${data.background_url}")`;
+    }
+
+
+    // BOTÓN
+
+    const button =
+      document.getElementById("specialButton");
+
+    if (data.button_text && data.button_url) {
+
+      button.textContent = data.button_text;
+      button.href = data.button_url;
+      button.style.backgroundColor = color;
+      button.style.display = "block";
+    }
+
+
+    // MÚSICA
+
+    const music =
+      document.getElementById("specialMusic");
+
+    const musicBox =
+      document.getElementById("musicBox");
+
+    if (data.music_url) {
+      music.src = data.music_url;
+      musicBox.style.display = "block";
+    }
+
+  }
+
+  catch (error) {
+    console.error(
+      "Error cargando la tarjeta especial:",
+      error
+    );
+  }
+}
+
+cargarTarjetaEspecial();
+
+</script>
+
+</body>
+</html>
