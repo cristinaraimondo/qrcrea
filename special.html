@@ -252,23 +252,42 @@
 }
 /* Brillos de invitación */
 
-.sparkle {
+.lightParticle {
   position: absolute;
-  color: #c4a7ff;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.95);
+
+  box-shadow:
+    0 0 6px rgba(255,255,255,1),
+    0 0 14px rgba(255,210,235,.9),
+    0 0 24px rgba(190,175,255,.7);
+
   pointer-events: none;
-  z-index: 10;
-  animation: sparkleGlow 2.2s ease-in-out infinite;
+
+  animation: lightFloat ease-in-out infinite;
 }
 
-@keyframes sparkleGlow {
-  0%, 100% {
+@keyframes lightFloat {
+
+  0% {
     opacity: 0;
-    transform: scale(0.5) rotate(0deg);
+    transform: translateY(20px) scale(.4);
   }
 
-  50% {
-    opacity: 0.9;
-    transform: scale(1.2) rotate(20deg);
+  30% {
+    opacity: .9;
+  }
+
+  60% {
+    opacity: .6;
+    transform: translateY(-25px) scale(1.2);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(-55px) scale(.3);
   }
 }
 
@@ -406,35 +425,37 @@ function iniciarNieve() {
     }, 11000);
   }
 }
-function iniciarBrillos() {
+function iniciarParticulasLuz() {
 
   const layer = document.getElementById("effectsLayer");
 
-  for (let i = 0; i < 22; i++) {
+  for (let i = 0; i < 30; i++) {
 
-    const sparkle = document.createElement("span");
+    const particle = document.createElement("span");
 
-    sparkle.className = "sparkle";
-    sparkle.textContent = Math.random() > 0.5 ? "✦" : "✧";
+    particle.className = "lightParticle";
 
-    sparkle.style.left =
+    particle.style.left =
       (5 + Math.random() * 90) + "vw";
 
-    sparkle.style.top =
-      (5 + Math.random() * 90) + "vh";
+    particle.style.top =
+      (10 + Math.random() * 80) + "vh";
 
-    sparkle.style.fontSize =
-      (10 + Math.random() * 16) + "px";
+    const size = 3 + Math.random() * 6;
 
-    sparkle.style.animationDelay =
-      (Math.random() * 3) + "s";
+    particle.style.width = size + "px";
+    particle.style.height = size + "px";
 
-    sparkle.style.animationDuration =
-      (1.5 + Math.random() * 2) + "s";
+    particle.style.animationDuration =
+      (3 + Math.random() * 4) + "s";
 
-    layer.appendChild(sparkle);
+    particle.style.animationDelay =
+      (Math.random() * 5) + "s";
+
+    layer.appendChild(particle);
   }
 }
+
 
 async function cargarTarjetaEspecial() {
 
@@ -466,7 +487,7 @@ if (template === "christmas") {
   iniciarNieve();
 }
 if (template === "invitation") {
-  iniciarBrillos();
+  iniciarParticulasLuz();
 }
 
     // ICONO SEGÚN TIPO
