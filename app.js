@@ -38,6 +38,217 @@ const vcardFields = document.getElementById("vcardFields");
 const specialFields = document.getElementById("specialFields");
 const specialColorInput = document.getElementById("specialColor");
 const specialColorValue = document.getElementById("specialColorValue");
+const specialTemplateSelect =
+  document.getElementById("specialTemplate");
+
+const templateInfo =
+  document.getElementById("templateInfo");
+  specialTemplateSelect.addEventListener("change", () => {
+
+  const textos = {
+    birthday: "🎉 Confeti animado y estilo festivo.",
+    christmas: "❄️ Nieve animada y ambiente navideño.",
+    invitation: "✨ Diseño elegante con partículas luminosas.",
+    custom: "🎨 Elegí tu color, imagen y fondo para crear tu propio estilo."
+  };
+
+  templateInfo.textContent =
+    textos[specialTemplateSelect.value];
+});
+templateInfo.textContent =
+  "🎉 Confeti animado y estilo festivo.";
+  // ===============================
+// VISTA PREVIA TARJETA ESPECIAL
+// ===============================
+
+const specialTitleInput =
+  document.getElementById("specialTitle");
+
+const specialMessageInput =
+  document.getElementById("specialMessage");
+
+const specialImageInput =
+  document.getElementById("specialImage");
+  const specialBackgroundInput =
+  document.getElementById("specialBackground");
+
+const specialButtonTextInput =
+  document.getElementById("specialButtonText");
+
+const specialPreviewCard =
+  document.getElementById("specialPreviewCard");
+
+const specialPreviewIcon =
+  document.getElementById("specialPreviewIcon");
+
+const specialPreviewTitle =
+  document.getElementById("specialPreviewTitle");
+
+const specialPreviewImage =
+  document.getElementById("specialPreviewImage");
+
+const specialPreviewMessage =
+  document.getElementById("specialPreviewMessage");
+
+const specialPreviewButton =
+  document.getElementById("specialPreviewButton");
+
+
+function actualizarPreviewEspecial() {
+
+  // Tipo de tarjeta
+  const iconos = {
+    birthday: "🎂",
+    christmas: "🎄",
+    invitation: "💌",
+    custom: "✨"
+  };
+
+  specialPreviewIcon.textContent =
+    iconos[specialTemplateSelect.value] || "✨";
+
+
+  // Título
+  specialPreviewTitle.textContent =
+    specialTitleInput.value.trim() || "Tu título";
+
+
+  // Mensaje
+  specialPreviewMessage.textContent =
+    specialMessageInput.value.trim() ||
+    "Tu mensaje aparecerá aquí";
+
+
+  // Color elegido
+  const color = specialColorInput.value;
+
+  specialPreviewTitle.style.color = color;
+
+  specialPreviewButton.style.backgroundColor = color;
+
+
+  // Botón
+  if (specialButtonTextInput.value.trim()) {
+
+    specialPreviewButton.textContent =
+      specialButtonTextInput.value.trim();
+
+    specialPreviewButton.style.display = "block";
+
+  } else {
+
+    specialPreviewButton.style.display = "none";
+  }
+// Estilo según tarjeta
+let fondoBase = "#ffffff";
+
+if (specialTemplateSelect.value === "birthday") {
+  fondoBase = "#fff7ed";
+}
+
+else if (specialTemplateSelect.value === "christmas") {
+  fondoBase = "#f0fdf4";
+}
+
+else if (specialTemplateSelect.value === "invitation") {
+  fondoBase =
+    "linear-gradient(145deg, #fffafd, #f7f2ff, #fffaf5)";
+}
+
+if (specialPreviewBackground) {
+
+  specialPreviewCard.style.background =
+    `linear-gradient(
+      rgba(255,255,255,.78),
+      rgba(255,255,255,.78)
+    ),
+    url("${specialPreviewBackground}") center / cover no-repeat`;
+
+}
+
+else {
+  specialPreviewCard.style.background = fondoBase;
+}
+
+}
+
+
+// Imagen principal
+specialImageInput.addEventListener("change", () => {
+
+  const archivo = specialImageInput.files[0];
+
+  if (!archivo) {
+    specialPreviewImage.style.display = "none";
+    specialPreviewImage.src = "";
+    return;
+  }
+
+  const lector = new FileReader();
+
+  lector.onload = (e) => {
+    specialPreviewImage.src = e.target.result;
+    specialPreviewImage.style.display = "block";
+  };
+
+  lector.readAsDataURL(archivo);
+});
+// Imagen de fondo
+specialBackgroundInput.addEventListener("change", () => {
+
+  const archivo = specialBackgroundInput.files[0];
+
+  if (!archivo) {
+    specialPreviewBackground = null;
+    actualizarPreviewEspecial();
+    return;
+  }
+
+  const lector = new FileReader();
+
+  lector.onload = (e) => {
+
+    specialPreviewBackground = e.target.result;
+
+    actualizarPreviewEspecial();
+
+  };
+
+  lector.readAsDataURL(archivo);
+
+});
+
+// Actualización en vivo
+specialTitleInput.addEventListener(
+  "input",
+  actualizarPreviewEspecial
+);
+
+specialMessageInput.addEventListener(
+  "input",
+  actualizarPreviewEspecial
+);
+
+specialButtonTextInput.addEventListener(
+  "input",
+  actualizarPreviewEspecial
+);
+
+specialColorInput.addEventListener(
+  "input",
+  actualizarPreviewEspecial
+);
+
+specialTemplateSelect.addEventListener(
+  "change",
+  actualizarPreviewEspecial
+);
+
+
+// Estado inicial
+let specialPreviewBackground = null;
+
+
 
 const qrColorValue = document.getElementById("qrColorValue");
 const vcardColorInput = document.getElementById("vcardColor");

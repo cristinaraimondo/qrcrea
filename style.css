@@ -1286,3 +1286,83 @@ row-gap: 6px;
 #form-checkout > input {
   margin: 0;
 }
+.templateInfo {
+  margin-top: 8px;
+  margin-bottom: 18px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: #f5f3ff;
+  color: #555;
+  font-size: 14px;
+  line-height: 1.4;
+}
+/* =========================
+   VISTA PREVIA TARJETA ESPECIAL
+========================= */
+
+.specialPreview {
+  margin-top: 28px;
+  padding-top: 22px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.specialPreviewLabel {
+  font-size: 14px;
+  font-weight: 700;
+  color: #555;
+  margin-bottom: 12px;
+}
+
+.specialPreviewCard {
+  width: 100%;
+  max-width: 360px;
+  margin: 0 auto;
+  padding: 25px 20px;
+  background: #ffffff;
+  border-radius: 22px;
+  text-align: center;
+
+  box-shadow:
+    0 10px 30px rgba(0,0,0,.10);
+
+  border: 1px solid #e5e7eb;
+}
+
+.specialPreviewIcon {
+  font-size: 35px;
+  margin-bottom: 10px;
+}
+
+.specialPreviewTitle {
+  font-size: 24px;
+  font-weight: 700;
+  color: #635bff;
+  margin-bottom: 16px;
+}
+
+.specialPreviewImage {
+  display: none;
+  width: 100%;
+  max-height: 240px;
+  object-fit: contain;
+  border-radius: 14px;
+  margin-bottom: 16px;
+}
+
+.specialPreviewMessage {
+  font-size: 15px;
+  line-height: 1.5;
+  color: #333;
+  margin-bottom: 16px;
+}
+
+.specialPreviewButton {
+  display: none;
+  width: 100%;
+  padding: 12px 16px;
+  background: #635bff;
+  color: white;
+  font-size: 14px;
+  font-weight: 700;
+  border-radius: 12px;
+}
