@@ -309,6 +309,13 @@ qrSearch.addEventListener("input", () => {
   }
 });
 let selectedQrType = "url";
+// ===============================
+// MODO EDICIÓN
+// ===============================
+
+let editingQrId = null;
+let editingQrType = null;
+let editingQrData = null;
 
   function actualizarTipoQr() {
 
@@ -412,9 +419,20 @@ const specialBackgroundArchivo =
 const specialMusicArchivo =
   document.getElementById("specialMusic").files[0];
 
-let specialImagePath = null;
-let specialBackgroundPath = null;
-let specialMusicPath = null;
+let specialImagePath =
+  editingQrType === "special"
+    ? editingQrData?.vcard_data?.image_path || null
+    : null;
+
+let specialBackgroundPath =
+  editingQrType === "special"
+    ? editingQrData?.vcard_data?.background_path || null
+    : null;
+
+let specialMusicPath =
+  editingQrType === "special"
+    ? editingQrData?.vcard_data?.music_path || null
+    : null;
   const qrFile = document.getElementById("qrFile");
   const archivo = qrFile.files[0];
   const logoArchivo = qrLogoInput.files[0];
@@ -684,17 +702,40 @@ if (selectedQrType === "vcard") {
   };
 }
 if (selectedQrType === "special") {
+
+  // Si estamos editando, conservar primero todos los datos anteriores
+  const datosAnteriores =
+    editingQrType === "special"
+      ? (editingQrData?.vcard_data || {})
+      : {};
+
   vcardData = {
+    ...datosAnteriores,
+
     template: specialTemplate,
     title: specialTitle,
     message: specialMessage,
     button_text: specialButtonText,
     button_url: specialButtonUrl,
     color: specialColorInput.value,
-    image_path: specialImagePath,
-    background_path: specialBackgroundPath,
-    music_path: specialMusicPath
+
+    // Solo reemplazar si realmente existe un archivo nuevo
+    image_path:
+      specialImagePath ||
+      datosAnteriores.image_path ||
+      null,
+
+    background_path:
+      specialBackgroundPath ||
+      datosAnteriores.background_path ||
+      null,
+
+    music_path:
+      specialMusicPath ||
+      datosAnteriores.music_path ||
+      null
   };
+
 }
   qrContainer.innerHTML = "";
   const qrResultCard = document.getElementById("qrResultCard");
@@ -742,7 +783,40 @@ if (logoFile) {
 }
  
 
-  const { data, error } = await supabaseClient
+let data;
+let error;
+
+// =====================================
+// EDITAR TARJETA EXISTENTE
+// =====================================
+if (editingQrId && editingQrType === "special") {
+
+  const resultado = await supabaseClient
+    .from("qr_codes")
+    .update({
+      name: qrName,
+      type: tipoQr,
+      destination_url: destinoFinal,
+      logo_path: logoPath,
+      qr_color: qrColorInput.value,
+      background_color: qrBackgroundColorInput.value,
+      vcard_data: vcardData
+    })
+    .eq("id", editingQrId)
+    .eq("user_id", user.id)
+    .select();
+
+  data = resultado.data;
+  error = resultado.error;
+
+}
+
+// =====================================
+// CREAR QR NUEVO
+// =====================================
+else {
+
+  const resultado = await supabaseClient
     .from("qr_codes")
     .insert({
       user_id: user.id,
@@ -756,6 +830,11 @@ if (logoFile) {
       vcard_data: vcardData,
     })
     .select();
+
+  data = resultado.data;
+  error = resultado.error;
+
+}
 
   if (error) {
     console.error("Error al guardar QR:", error);
@@ -772,7 +851,23 @@ qrLogoInput.value = "";
 
 qrColorInput.value = "#000000";
 qrColorValue.textContent = "#000000";
+ if (editingQrId && editingQrType === "special") {
+
+  alert("✅ Tarjeta actualizada correctamente.");
+
+  // Salir del modo edición
+  editingQrId = null;
+  editingQrType = null;
+  editingQrData = null;
+
+  // Volver el botón a su estado normal
+  generateBtn.textContent = "Generar QR";
+
+} else {
+
   alert("✅ QR generado y guardado correctamente.");
+
+}
 });
 const registerBtn = document.getElementById("registerBtn");
 const registerEmail = document.getElementById("registerEmail");
@@ -1116,16 +1211,153 @@ const editFile = document.getElementById("editFile");
 const saveEditBtn = document.getElementById("saveEditBtn");
 const cancelEditBtn = document.getElementById("cancelEditBtn");
 
-document.addEventListener("click", (e) => {
+document.addEventListener("click", async (e) => {
+
   if (!e.target.classList.contains("editQrBtn")) return;
 
-  qrEditandoId = e.target.dataset.id;
-  qrEditandoTipoAnterior = e.target.dataset.type;
+  const id = e.target.dataset.id;
+  const tipo = e.target.dataset.type;
+
+  // =====================================
+  // EDITAR TARJETA ESPECIAL
+  // =====================================
+
+  if (tipo === "special") {
+
+    const { data: qr, error } =
+      await supabaseClient
+        .from("qr_codes")
+        .select("*")
+        .eq("id", id)
+        .single();
+
+    if (error || !qr) {
+      console.error(error);
+      alert("No se pudo cargar la tarjeta.");
+      return;
+    }
+
+    editingQrId = qr.id;
+    editingQrType = "special";
+    editingQrData = qr;
+
+    selectedQrType = "special";
+    // Limpiar archivos de una edición anterior
+specialImageInput.value = "";
+specialBackgroundInput.value = "";
+document.getElementById("specialMusic").value = "";
+
+// Limpiar preview anterior
+specialPreviewImage.src = "";
+specialPreviewImage.style.display = "none";
+
+specialPreviewBackground = null;
+    generateBtn.textContent = "💾 Guardar cambios";
+    document.getElementById("qrName").value = qr.name || "";
+
+    // Mostrar formulario especial
+    actualizarTipoQr();
+
+    const datos = qr.vcard_data || {};
+
+    // Cargar datos actuales
+    specialTemplateSelect.value =
+      datos.template || "custom";
+
+    specialTitleInput.value =
+      datos.title || "";
+
+    specialMessageInput.value =
+      datos.message || "";
+
+    specialButtonTextInput.value =
+      datos.button_text || "";
+
+    document.getElementById("specialButtonUrl").value =
+      datos.button_url || "";
+
+    specialColorInput.value =
+      datos.color || "#635bff";
+
+
+    specialColorValue.textContent =
+      specialColorInput.value.toUpperCase();
+      // ===============================
+// ARCHIVOS EXISTENTES DE ESTA TARJETA
+// ===============================
+
+editingQrData.vcard_data = {
+  ...datos,
+  image_path: datos.image_path || null,
+  background_path: datos.background_path || null,
+  music_path: datos.music_path || null
+};
+
+    // Actualizar descripción y preview
+    specialTemplateSelect.dispatchEvent(
+      new Event("change")
+    );
+
+    actualizarPreviewEspecial();
+
+// ===============================
+// CARGAR ARCHIVOS EXISTENTES EN PREVIEW
+// ===============================
+
+try {
+
+  const response = await fetch(
+    `https://srottoudvavudcujvzeb.supabase.co/functions/v1/resolve-qr?slug=${encodeURIComponent(qr.slug)}`
+  );
+
+  if (response.ok) {
+
+    const archivosActuales = await response.json();
+
+    // Imagen principal existente
+    if (archivosActuales.image_url) {
+      specialPreviewImage.src = archivosActuales.image_url;
+      specialPreviewImage.style.display = "block";
+    }
+
+    // Fondo existente
+    if (archivosActuales.background_url) {
+      specialPreviewBackground =
+        archivosActuales.background_url;
+
+      actualizarPreviewEspecial();
+    }
+
+  }
+
+} catch (error) {
+  console.error(
+    "No se pudieron cargar los archivos de la tarjeta:",
+    error
+  );
+}
+    // Llevar al usuario al formulario
+    specialFields.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+
+    return;
+  }
+
+
+  // =====================================
+  // EDICIÓN NORMAL DE QR
+  // =====================================
+
+  qrEditandoId = id;
+  qrEditandoTipoAnterior = tipo;
   qrEditandoRutaAnterior = e.target.dataset.url;
 
   editUrl.value = e.target.dataset.url || "";
   editType.value = "url";
   editPanel.style.display = "block";
+
 });
 
 cancelEditBtn.addEventListener("click", () => {
