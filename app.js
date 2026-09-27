@@ -311,6 +311,25 @@ document.getElementById("vcardDescription").addEventListener("input", (e) => {
   vcardPreviewDescription.textContent =
     e.target.value || "Tu descripción aparecerá aquí";
 });
+const vcardPreviewContact =
+  document.getElementById("vcardPreviewContact");
+
+// Teléfono en vivo
+document.getElementById("vcardPhone").addEventListener("input", (e) => {
+  vcardPreviewContact.textContent =
+    e.target.value
+      ? `📱 ${e.target.value}`
+      : "📱 Teléfono";
+});
+
+// Color en vivo
+vcardColorInput.addEventListener("input", () => {
+
+  const color = vcardColorInput.value;
+
+  vcardPreviewName.style.color = color;
+  vcardPreviewContact.style.backgroundColor = color;
+});
 
 vcardBackgroundInput.addEventListener("change", () => {
 
