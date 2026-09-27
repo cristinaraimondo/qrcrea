@@ -2263,3 +2263,19 @@ row-gap: 6px;
     gap: 10px 16px;
   }
 }
+@media (max-width: 768px) {
+
+  .benefitsGrid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .benefitItem {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+}
