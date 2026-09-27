@@ -275,6 +275,11 @@ vcardColorInput.addEventListener("input", () => {
       icono.style.border = `2px solid ${color}`;
     });
 
+document
+  .querySelectorAll(".vcardPreviewAction")
+  .forEach(boton => {
+    boton.style.backgroundColor = color;
+  });
 });
 specialColorInput.addEventListener("input", () => {
   specialColorValue.textContent = specialColorInput.value.toUpperCase();
