@@ -255,6 +255,8 @@ const vcardColorInput = document.getElementById("vcardColor");
 const vcardColorValue = document.getElementById("vcardColorValue");
 const vcardPhotoInput = document.getElementById("vcardPhoto");
 const vcardBackgroundInput = document.getElementById("vcardBackground");
+const vcardPreviewPhoto =
+  document.getElementById("vcardPreviewPhoto");
 
 qrColorInput.addEventListener("input", () => {
   qrColorValue.textContent = qrColorInput.value.toUpperCase();
@@ -264,6 +266,25 @@ vcardColorInput.addEventListener("input", () => {
 });
 specialColorInput.addEventListener("input", () => {
   specialColorValue.textContent = specialColorInput.value.toUpperCase();
+});
+vcardPhotoInput.addEventListener("change", () => {
+
+  const archivo = vcardPhotoInput.files[0];
+
+  if (!archivo) {
+    vcardPreviewPhoto.src = "";
+    vcardPreviewPhoto.style.display = "none";
+    return;
+  }
+
+  const lector = new FileReader();
+
+  lector.onload = (e) => {
+    vcardPreviewPhoto.src = e.target.result;
+    vcardPreviewPhoto.style.display = "block";
+  };
+
+  lector.readAsDataURL(archivo);
 });
 const qrBackgroundColorInput = document.getElementById("qrBackgroundColor");
 const qrBackgroundColorValue = document.getElementById("qrBackgroundColorValue");
@@ -437,10 +458,19 @@ let specialMusicPath =
   const archivo = qrFile.files[0];
   const logoArchivo = qrLogoInput.files[0];
   let logoPath = null;
-  const vcardPhotoArchivo = vcardPhotoInput.files[0];
-let vcardPhotoPath = null;
+ const vcardPhotoArchivo = vcardPhotoInput.files[0];
+
+let vcardPhotoPath =
+  editingQrType === "vcard"
+    ? editingQrData?.vcard_data?.photo_path || null
+    : null;
+
 const vcardBackgroundArchivo = vcardBackgroundInput.files[0];
-let vcardBackgroundPath = null;
+
+let vcardBackgroundPath =
+  editingQrType === "vcard"
+    ? editingQrData?.vcard_data?.background_path || null
+    : null;
 
 if (!qrName) {
   alert("Completá el nombre del QR.");
@@ -684,21 +714,37 @@ if (specialMusicArchivo) {
   specialMusicPath = rutaMusica;
 }
 if (selectedQrType === "vcard") {
+
+  const datosAnterioresVcard =
+    editingQrType === "vcard"
+      ? (editingQrData?.vcard_data || {})
+      : {};
+
   vcardData = {
+    ...datosAnterioresVcard,
+
     name: vcardName,
     company: vcardCompany,
-     description: vcardDescription,
+    description: vcardDescription,
     phone: vcardPhone,
     whatsapp: vcardWhatsapp,
     email: vcardEmail,
     website: vcardWebsite,
     instagram: vcardInstagram,
-   facebook: vcardFacebook,
-   tiktok: vcardTiktok,
-   linkedin: vcardLinkedin,
+    facebook: vcardFacebook,
+    tiktok: vcardTiktok,
+    linkedin: vcardLinkedin,
     color: vcardColorInput.value,
-    photo_path: vcardPhotoPath,
-    background_path: vcardBackgroundPath
+
+    photo_path:
+      vcardPhotoPath ||
+      datosAnterioresVcard.photo_path ||
+      null,
+
+    background_path:
+      vcardBackgroundPath ||
+      datosAnterioresVcard.background_path ||
+      null
   };
 }
 if (selectedQrType === "special") {
@@ -789,7 +835,10 @@ let error;
 // =====================================
 // EDITAR TARJETA EXISTENTE
 // =====================================
-if (editingQrId && editingQrType === "special") {
+if (
+  editingQrId &&
+  (editingQrType === "special" || editingQrType === "vcard")
+) {
 
   const resultado = await supabaseClient
     .from("qr_codes")
@@ -851,22 +900,19 @@ qrLogoInput.value = "";
 
 qrColorInput.value = "#000000";
 qrColorValue.textContent = "#000000";
- if (editingQrId && editingQrType === "special") {
-
+if (
+  editingQrId &&
+  (editingQrType === "special" || editingQrType === "vcard")
+) {
   alert("✅ Tarjeta actualizada correctamente.");
 
-  // Salir del modo edición
   editingQrId = null;
   editingQrType = null;
   editingQrData = null;
 
-  // Volver el botón a su estado normal
   generateBtn.textContent = "Generar QR";
-
 } else {
-
   alert("✅ QR generado y guardado correctamente.");
-
 }
 });
 const registerBtn = document.getElementById("registerBtn");
@@ -1217,6 +1263,96 @@ document.addEventListener("click", async (e) => {
 
   const id = e.target.dataset.id;
   const tipo = e.target.dataset.type;
+  // =====================================
+// EDITAR TARJETA DE PRESENTACIÓN
+// =====================================
+
+if (tipo === "vcard") {
+
+  const { data: qr, error } =
+    await supabaseClient
+      .from("qr_codes")
+      .select("*")
+      .eq("id", id)
+      .single();
+
+  if (error || !qr) {
+    console.error(error);
+    alert("No se pudo cargar la tarjeta de presentación.");
+    return;
+  }
+
+  editingQrId = qr.id;
+  editingQrType = "vcard";
+  editingQrData = qr;
+
+  selectedQrType = "vcard";
+
+  // Nombre del QR
+  document.getElementById("qrName").value = qr.name || "";
+
+  // Mostrar formulario de tarjeta
+  actualizarTipoQr();
+
+  const datos = qr.vcard_data || {};
+
+  // Cargar los datos actuales
+  document.getElementById("vcardName").value =
+    datos.name || "";
+
+  document.getElementById("vcardCompany").value =
+    datos.company || "";
+
+  document.getElementById("vcardDescription").value =
+    datos.description || "";
+
+  document.getElementById("vcardPhone").value =
+    datos.phone || "";
+
+  document.getElementById("vcardWhatsapp").value =
+    datos.whatsapp || "";
+
+  document.getElementById("vcardEmail").value =
+    datos.email || "";
+
+  document.getElementById("vcardWebsite").value =
+    datos.website || "";
+
+  document.getElementById("vcardInstagram").value =
+    datos.instagram || "";
+
+  document.getElementById("vcardFacebook").value =
+    datos.facebook || "";
+
+  document.getElementById("vcardTiktok").value =
+    datos.tiktok || "";
+
+  document.getElementById("vcardLinkedin").value =
+    datos.linkedin || "";
+
+  // Color
+  const color = datos.color || "#635BFF";
+
+  document.getElementById("vcardColor").value = color;
+  document.getElementById("vcardColorValue").textContent =
+    color.toUpperCase();
+
+  // Limpiar selectores de archivos.
+  // Esto NO elimina los archivos existentes.
+  document.getElementById("vcardPhoto").value = "";
+  document.getElementById("vcardBackground").value = "";
+
+  // Cambiar botón a modo edición
+  generateBtn.textContent = "💾 Guardar cambios";
+
+  // Llevarnos al formulario
+  document.getElementById("vcardFields").scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
+
+  return;
+}
 
   // =====================================
   // EDITAR TARJETA ESPECIAL

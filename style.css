@@ -1366,3 +1366,121 @@ row-gap: 6px;
   font-weight: 700;
   border-radius: 12px;
 }
+/* ===============================
+   VISTA PREVIA - TARJETA VCARD
+================================ */
+
+.vcardPreview {
+  margin-top: 28px;
+}
+
+.vcardPreviewLabel {
+  font-size: 14px;
+  font-weight: 600;
+  color: #555;
+  margin-bottom: 10px;
+}
+
+.vcardPreviewCard {
+  position: relative;
+  overflow: hidden;
+  max-width: 420px;
+  min-height: 360px;
+  padding: 30px 24px;
+  margin: 0 auto;
+
+  background: #ffffff;
+  border-radius: 24px;
+
+  box-shadow:
+    0 18px 45px rgba(0, 0, 0, 0.12);
+
+  text-align: center;
+
+  background-size: cover;
+  background-position: center;
+}
+
+/* Foto o logo */
+
+.vcardPreviewPhoto {
+  display: none;
+
+  width: 110px;
+  height: 110px;
+
+  margin: 0 auto 18px;
+
+  border-radius: 50%;
+  object-fit: cover;
+
+  background: white;
+  border: 4px solid rgba(255, 255, 255, 0.9);
+
+  box-shadow:
+    0 6px 18px rgba(0, 0, 0, 0.16);
+
+  position: relative;
+  z-index: 2;
+}
+
+/* Nombre */
+
+.vcardPreviewName {
+  position: relative;
+  z-index: 2;
+
+  font-size: 25px;
+  font-weight: 700;
+
+  color: #635BFF;
+
+  margin-bottom: 5px;
+}
+
+/* Empresa */
+
+.vcardPreviewCompany {
+  position: relative;
+  z-index: 2;
+
+  font-size: 16px;
+  font-weight: 600;
+
+  color: #444;
+
+  margin-bottom: 16px;
+}
+
+/* Descripción */
+
+.vcardPreviewDescription {
+  position: relative;
+  z-index: 2;
+
+  font-size: 14px;
+  line-height: 1.5;
+
+  color: #555;
+
+  margin-bottom: 22px;
+}
+
+/* Contacto */
+
+.vcardPreviewContact {
+  position: relative;
+  z-index: 2;
+
+  display: inline-block;
+
+  padding: 10px 18px;
+
+  border-radius: 12px;
+
+  background: #635BFF;
+  color: white;
+
+  font-size: 14px;
+  font-weight: 600;
+}
