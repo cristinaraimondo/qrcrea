@@ -286,6 +286,29 @@ vcardPhotoInput.addEventListener("change", () => {
 
   lector.readAsDataURL(archivo);
 });
+
+const vcardPreviewCard =
+  document.getElementById("vcardPreviewCard");
+
+vcardBackgroundInput.addEventListener("change", () => {
+
+  const archivo = vcardBackgroundInput.files[0];
+
+  if (!archivo) {
+    vcardPreviewCard.style.backgroundImage = "";
+    return;
+  }
+
+  const lector = new FileReader();
+
+  lector.onload = (e) => {
+    vcardPreviewCard.style.backgroundImage =
+      `linear-gradient(rgba(255,255,255,.78), rgba(255,255,255,.78)),
+       url("${e.target.result}")`;
+  };
+
+  lector.readAsDataURL(archivo);
+});
 const qrBackgroundColorInput = document.getElementById("qrBackgroundColor");
 const qrBackgroundColorValue = document.getElementById("qrBackgroundColorValue");
 
@@ -1344,6 +1367,46 @@ if (tipo === "vcard") {
 
   // Cambiar botón a modo edición
   generateBtn.textContent = "💾 Guardar cambios";
+  // ===============================
+// CARGAR FOTO Y FONDO EXISTENTES
+// ===============================
+
+try {
+
+  const response = await fetch(
+    `https://srottoudvavudcujvzeb.supabase.co/functions/v1/resolve-qr?slug=${encodeURIComponent(qr.slug)}`
+  );
+
+  if (response.ok) {
+
+    const datosPublicos = await response.json();
+
+    // Foto existente
+    if (datosPublicos.photo_url) {
+      vcardPreviewPhoto.src = datosPublicos.photo_url;
+      vcardPreviewPhoto.style.display = "block";
+    } else {
+      vcardPreviewPhoto.src = "";
+      vcardPreviewPhoto.style.display = "none";
+    }
+
+    // Fondo existente
+    if (datosPublicos.background_url) {
+      vcardPreviewCard.style.backgroundImage =
+        `linear-gradient(rgba(255,255,255,.78), rgba(255,255,255,.78)),
+         url("${datosPublicos.background_url}")`;
+    } else {
+      vcardPreviewCard.style.backgroundImage = "";
+    }
+
+  }
+
+} catch (error) {
+  console.error(
+    "No se pudieron cargar los archivos de la vCard:",
+    error
+  );
+}
 
   // Llevarnos al formulario
   document.getElementById("vcardFields").scrollIntoView({
