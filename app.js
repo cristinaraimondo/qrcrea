@@ -289,6 +289,28 @@ vcardPhotoInput.addEventListener("change", () => {
 
 const vcardPreviewCard =
   document.getElementById("vcardPreviewCard");
+  const vcardPreviewName =
+  document.getElementById("vcardPreviewName");
+
+const vcardPreviewCompany =
+  document.getElementById("vcardPreviewCompany");
+
+const vcardPreviewDescription =
+  document.getElementById("vcardPreviewDescription");
+  document.getElementById("vcardName").addEventListener("input", (e) => {
+  vcardPreviewName.textContent =
+    e.target.value || "Nombre y apellido";
+});
+
+document.getElementById("vcardCompany").addEventListener("input", (e) => {
+  vcardPreviewCompany.textContent =
+    e.target.value || "Empresa o profesión";
+});
+
+document.getElementById("vcardDescription").addEventListener("input", (e) => {
+  vcardPreviewDescription.textContent =
+    e.target.value || "Tu descripción aparecerá aquí";
+});
 
 vcardBackgroundInput.addEventListener("change", () => {
 
