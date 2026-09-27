@@ -262,7 +262,19 @@ qrColorInput.addEventListener("input", () => {
   qrColorValue.textContent = qrColorInput.value.toUpperCase();
 });
 vcardColorInput.addEventListener("input", () => {
-  vcardColorValue.textContent = vcardColorInput.value.toUpperCase();
+
+  const color = vcardColorInput.value;
+
+  vcardPreviewName.style.color = color;
+  vcardPreviewContact.style.backgroundColor = color;
+
+  document
+    .querySelectorAll(".socialPreview")
+    .forEach(icono => {
+      icono.style.color = color;
+      icono.style.border = `2px solid ${color}`;
+    });
+
 });
 specialColorInput.addEventListener("input", () => {
   specialColorValue.textContent = specialColorInput.value.toUpperCase();
@@ -350,6 +362,33 @@ vcardBackgroundInput.addEventListener("change", () => {
 
   lector.readAsDataURL(archivo);
 });
+// =====================================
+// REDES Y CONTACTO - PREVIEW VCARD
+// =====================================
+
+function actualizarItemPreview(inputId, previewId) {
+
+  const input = document.getElementById(inputId);
+  const preview = document.getElementById(previewId);
+
+  function actualizar() {
+    preview.style.display =
+      input.value.trim() ? "inline-block" : "none";
+  }
+
+  input.addEventListener("input", actualizar);
+
+  // Mostrar también valores que ya estaban cargados
+  actualizar();
+}
+
+actualizarItemPreview("vcardWhatsapp", "previewWhatsapp");
+actualizarItemPreview("vcardEmail", "previewEmail");
+actualizarItemPreview("vcardWebsite", "previewWebsite");
+actualizarItemPreview("vcardInstagram", "previewInstagram");
+actualizarItemPreview("vcardFacebook", "previewFacebook");
+actualizarItemPreview("vcardTiktok", "previewTiktok");
+actualizarItemPreview("vcardLinkedin", "previewLinkedin");
 const qrBackgroundColorInput = document.getElementById("qrBackgroundColor");
 const qrBackgroundColorValue = document.getElementById("qrBackgroundColorValue");
 
@@ -1408,6 +1447,20 @@ if (tipo === "vcard") {
 
   // Cambiar botón a modo edición
   generateBtn.textContent = "💾 Guardar cambios";
+  // Actualizar textos de la vista previa
+vcardPreviewName.textContent =
+  datos.name || "Nombre y apellido";
+
+vcardPreviewCompany.textContent =
+  datos.company || "Empresa o profesión";
+
+vcardPreviewDescription.textContent =
+  datos.description || "Tu descripción aparecerá aquí";
+
+vcardPreviewContact.textContent =
+  datos.phone
+    ? `📱 ${datos.phone}`
+    : "📱 Teléfono";
   // ===============================
 // CARGAR FOTO Y FONDO EXISTENTES
 // ===============================

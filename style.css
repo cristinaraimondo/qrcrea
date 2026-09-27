@@ -1496,14 +1496,25 @@ row-gap: 6px;
   margin-top: 18px;
 }
 
-.vcardPreviewLinks span {
-  padding: 7px 11px;
-  border-radius: 10px;
+.vcardPreviewLinks .socialPreview {
+  display: none;
 
-  background: rgba(255,255,255,.88);
+  width: 38px;
+  height: 38px;
+  padding: 0;
 
-  font-size: 12px;
-  font-weight: 600;
+  align-items: center;
+  justify-content: center;
 
-  box-shadow: 0 3px 10px rgba(0,0,0,.08);
+  border-radius: 50%;
+
+  background: rgba(255,255,255,.92);
+  color: #635BFF;
+  border: 2px solid #635BFF;
+
+  font-size: 15px;
+  font-weight: 700;
+
+  box-shadow: 0 4px 12px rgba(0,0,0,.12);
+  backdrop-filter: blur(5px);
 }
