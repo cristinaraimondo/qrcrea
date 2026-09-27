@@ -1706,4 +1706,24 @@ row-gap: 6px;
     width: 100%;
     max-width: 100%;
   }
+  /* Mis QR en celular */
+#myQrs {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  width: 100%;
+}
+
+#myQrs .qrItem {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  margin: 0;
+}
+
+#myQrs .qrItem img {
+  max-width: 100%;
+  height: auto;
+}
 }
