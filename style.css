@@ -1484,3 +1484,26 @@ row-gap: 6px;
   font-size: 14px;
   font-weight: 600;
 }
+.vcardPreviewLinks {
+  position: relative;
+  z-index: 2;
+
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+
+  margin-top: 18px;
+}
+
+.vcardPreviewLinks span {
+  padding: 7px 11px;
+  border-radius: 10px;
+
+  background: rgba(255,255,255,.88);
+
+  font-size: 12px;
+  font-weight: 600;
+
+  box-shadow: 0 3px 10px rgba(0,0,0,.08);
+}
