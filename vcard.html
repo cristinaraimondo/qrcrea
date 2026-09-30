@@ -268,9 +268,16 @@ if (data.location) {
   location.style.display = "none";
 }
 
-    const website = document.getElementById("cardWebsite");
-    website.textContent = "🌐 " + (data.website || "");
-    website.href = data.website || "#";
+  const website = document.getElementById("cardWebsite");
+
+if (data.website) {
+  website.textContent = "🌐 Sitio web";
+  website.href = data.website;
+  website.target = "_blank";
+  website.style.display = "block";
+} else {
+  website.style.display = "none";
+}
 
     const instagram = document.getElementById("cardInstagram");
 if (data.instagram) {
