@@ -254,15 +254,21 @@ if (data.whatsapp) {
   whatsapp.style.display = "none";
 }
 
-    const email = document.getElementById("cardEmail");
-    email.textContent = "✉️ " + (data.email || "");
-    email.href = `mailto:${data.email || ""}`;
+  const email = document.getElementById("cardEmail");
+
+if (data.email) {
+  email.textContent = "✉️ " + data.email;
+  email.href = `mailto:${data.email}`;
+  email.style.display = "block";
+} else {
+  email.style.display = "none";
+}
     const location = document.getElementById("cardLocation");
 
 if (data.location) {
-  location.textContent = "📍 " + data.location;
-  location.href =
-    `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(data.location)}`;
+  location.textContent = "📍 Ubicación";
+  location.href = data.location;
+  location.target = "_blank";
   location.style.display = "block";
 } else {
   location.style.display = "none";
