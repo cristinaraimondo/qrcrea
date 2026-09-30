@@ -157,6 +157,7 @@ overflow: hidden;
 <a id="cardPhone" href="#">📞 Teléfono</a>
 <a id="cardWhatsapp" href="#" target="_blank">💬 WhatsApp</a>
 <a id="cardEmail" href="#">✉️ Correo electrónico</a>
+<a id="cardLocation" href="#" target="_blank">📍 Ubicación</a>
 <a id="cardWebsite" href="#">🌐 Sitio web</a>
 <div class="socialLinks">
 
@@ -256,6 +257,16 @@ if (data.whatsapp) {
     const email = document.getElementById("cardEmail");
     email.textContent = "✉️ " + (data.email || "");
     email.href = `mailto:${data.email || ""}`;
+    const location = document.getElementById("cardLocation");
+
+if (data.location) {
+  location.textContent = "📍 " + data.location;
+  location.href =
+    `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(data.location)}`;
+  location.style.display = "block";
+} else {
+  location.style.display = "none";
+}
 
     const website = document.getElementById("cardWebsite");
     website.textContent = "🌐 " + (data.website || "");

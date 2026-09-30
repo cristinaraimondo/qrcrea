@@ -389,6 +389,7 @@ function actualizarItemPreview(inputId, previewId) {
 
 actualizarItemPreview("vcardWhatsapp", "previewWhatsapp");
 actualizarItemPreview("vcardEmail", "previewEmail");
+actualizarItemPreview("vcardLocation", "previewLocation");
 actualizarItemPreview("vcardWebsite", "previewWebsite");
 actualizarItemPreview("vcardInstagram", "previewInstagram");
 actualizarItemPreview("vcardFacebook", "previewFacebook");
@@ -528,6 +529,7 @@ const vcardDescription = document.getElementById("vcardDescription").value.trim(
 const vcardPhone = document.getElementById("vcardPhone").value.trim();
 const vcardWhatsapp = document.getElementById("vcardWhatsapp").value.trim();
 const vcardEmail = document.getElementById("vcardEmail").value.trim();
+const vcardLocation = document.getElementById("vcardLocation").value.trim();
 const vcardWebsite = document.getElementById("vcardWebsite").value.trim();
 const vcardInstagram = document.getElementById("vcardInstagram").value.trim();
 const vcardFacebook = document.getElementById("vcardFacebook").value.trim();
@@ -837,6 +839,7 @@ if (selectedQrType === "vcard") {
     phone: vcardPhone,
     whatsapp: vcardWhatsapp,
     email: vcardEmail,
+    location: vcardLocation,
     website: vcardWebsite,
     instagram: vcardInstagram,
     facebook: vcardFacebook,
@@ -1422,6 +1425,8 @@ if (tipo === "vcard") {
 
   document.getElementById("vcardEmail").value =
     datos.email || "";
+    document.getElementById("vcardLocation").value =
+  datos.location || "";
 
   document.getElementById("vcardWebsite").value =
     datos.website || "";
