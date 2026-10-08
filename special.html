@@ -670,9 +670,7 @@ ctx.drawImage(
 const streamVideo = canvasVideo.captureStream(30);
 
 console.log("Grabación preparada:", streamVideo.active);
-const grabador = new MediaRecorder(streamVideo, {
-  mimeType: "video/webm"
-});
+
 
 const fragmentos = [];
 
@@ -711,8 +709,12 @@ destinoAudio.stream.getAudioTracks().forEach(track => {
 
 await contextoAudio.resume();
 musica.currentTime = 0;
+const grabador = new MediaRecorder(streamVideo, {
+  mimeType: "video/webm"
+});
 
 grabador.start();
+
 await musica.play();
 
 await new Promise(resolve => setTimeout(resolve, 5000));
