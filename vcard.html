@@ -188,7 +188,12 @@ overflow: hidden;
     <div class="brand">
       Creado con QRcrea
     </div>
+    
   </div>
+  <button id="downloadPersonalCard" onclick="descargarTarjetaPersonal()">
+  🖼️ Descargar tarjeta
+</button>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script>
   const params = new URLSearchParams(window.location.search);
   const slug = params.get("slug");
@@ -316,6 +321,47 @@ if (data.linkedin) {
   linkedin.style.display = "none";
 }
   }
+  async function descargarTarjetaPersonal() {
+  const boton = document.getElementById("downloadPersonalCard");
+  const tarjeta = document.querySelector(".vcard");
+
+  boton.disabled = true;
+  boton.textContent = "🖼️ Preparando imagen...";
+
+  try {
+    await document.fonts.ready;
+
+    const imagenes = Array.from(tarjeta.querySelectorAll("img"));
+    await Promise.all(imagenes.filter(img => img.src).map(img => {
+      if (img.complete) return Promise.resolve();
+      return new Promise(resolve => {
+        img.addEventListener("load", resolve, { once: true });
+        img.addEventListener("error", resolve, { once: true });
+      });
+    }));
+
+    const captura = await html2canvas(tarjeta, {
+      backgroundColor: "#ffffff",
+      scale: 2,
+      useCORS: true
+    });
+
+    const enlace = document.createElement("a");
+    enlace.href = captura.toDataURL("image/png");
+    enlace.download = "tarjeta-personal-qrcrea.png";
+
+    document.body.appendChild(enlace);
+    enlace.click();
+    enlace.remove();
+
+  } catch (error) {
+    console.error("Error descargando tarjeta:", error);
+    alert("No se pudo descargar la tarjeta.");
+  } finally {
+    boton.disabled = false;
+    boton.textContent = "🖼️ Descargar tarjeta";
+  }
+}
 
   cargarTarjeta();
 </script>
