@@ -668,6 +668,11 @@ async function descargarTarjetaVideo() {
         elemento.id === "musicBox" ||
         elemento.id === "downloadCardVideo"
     });
+    // Descargar imagen de la tarjeta para generar el MP4
+const enlaceImagen = document.createElement("a");
+enlaceImagen.download = "tarjeta-qrcrea.png";
+enlaceImagen.href = captura.toDataURL("image/png");
+enlaceImagen.click();
 
     const canvas = document.createElement("canvas");
     canvas.width = 1080;
