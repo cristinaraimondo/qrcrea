@@ -641,6 +641,7 @@ if (template === "invitation") {
 }
 document.getElementById("downloadCardVideo")
   .addEventListener("click", descargarTarjetaVideo);
+  const SERVIDOR_VIDEO = "https://qrcrea.onrender.com/generar-video";
 
 async function descargarTarjetaVideo() {
   const boton = document.getElementById("downloadCardVideo");
@@ -668,6 +669,37 @@ async function descargarTarjetaVideo() {
         elemento.id === "musicBox" ||
         elemento.id === "downloadCardVideo"
     });
+    const respuesta = await fetch(SERVIDOR_VIDEO, {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    imagen: captura.toDataURL("image/png"),
+    musica: musica.src
+  })
+});
+
+if (!respuesta.ok) {
+  const error = await respuesta.json();
+  throw new Error(error.error || "No se pudo generar el MP4");
+}
+
+const videoMP4 = await respuesta.blob();
+const urlMP4 = URL.createObjectURL(videoMP4);
+
+const enlaceMP4 = document.createElement("a");
+enlaceMP4.href = urlMP4;
+enlaceMP4.download = "tarjeta-qrcrea.mp4";
+document.body.appendChild(enlaceMP4);
+enlaceMP4.click();
+enlaceMP4.remove();
+
+setTimeout(() => URL.revokeObjectURL(urlMP4), 60000);
+
+boton.textContent = "🎬 Descargar tarjeta con música";
+boton.disabled = false;
+return;
     // Descargar imagen de la tarjeta para generar el MP4
 const enlaceImagen = document.createElement("a");
 enlaceImagen.download = "tarjeta-qrcrea.png";

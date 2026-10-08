@@ -137,10 +137,10 @@ function generarArgumentos(imagen, musica, salida) {
     "pink"
   ];
 
-  const filtros = [
-    "scale=1080:1920:force_original_aspect_ratio=decrease",
-    "pad=1080:1920:(ow-iw)/2:(oh-ih)/2:white"
-  ];
+ const filtros = [
+  "scale=1080:1920:force_original_aspect_ratio=decrease",
+  "pad=1080:1920:(ow-iw)/2:(oh-ih)/2:white"
+];
 
   for (let i = 0; i < 65; i++) {
     const color = colores[i % colores.length];
@@ -158,7 +158,7 @@ function generarArgumentos(imagen, musica, salida) {
   return [
     "-y",
     "-loop", "1",
-    "-framerate", "30",
+    "-framerate", "10",
     "-i", imagen,
     "-i", musica,
     "-shortest",
