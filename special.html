@@ -398,7 +398,7 @@
     </div>
 
   </main>
-
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
 <script>
 
@@ -636,8 +636,38 @@ if (template === "invitation") {
     );
   }
 }
+document.getElementById("downloadCardVideo")
+  .addEventListener("click", descargarTarjetaVideo);
+
+async function descargarTarjetaVideo() {
+  const boton = document.getElementById("downloadCardVideo");
+
+  boton.disabled = true;
+  boton.textContent = "🎬 Preparando video...";
+
+  try {
+    const tarjeta = document.getElementById("specialCard");
+
+    const captura = await html2canvas(tarjeta, {
+      backgroundColor: null,
+      scale: 2,
+      useCORS: true
+    });
+
+    console.log("Tarjeta capturada:", captura.width, captura.height);
+    alert("La captura de la tarjeta se realizó correctamente.");
+
+  } catch (error) {
+    console.error("Error preparando el video:", error);
+    alert("No se pudo capturar la tarjeta.");
+  } finally {
+    boton.disabled = false;
+    boton.textContent = "🎬 Descargar tarjeta con música";
+  }
+}
 
 cargarTarjetaEspecial();
+
 
 </script>
 
