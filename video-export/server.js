@@ -84,8 +84,8 @@ async function descargarMusica(url, archivo) {
     redirect: "error",
     signal: AbortSignal.timeout(30000)
   });
-  console.log("Estado de descarga:", respuestaMusica.status);
-console.log("Error de Supabase:", await respuestaMusica.clone().text().then(t => t.slice(0, 300)).catch(() => "No disponible"));
+  console.log("Estado de descarga:", respuesta.status);
+console.log("Error de Supabase:", await respuesta.clone().text().then(t => t.slice(0, 300)).catch(() => "No disponible"));
 
   if (!respuesta.ok || !respuesta.body) {
     throw new Error("No se pudo descargar la música");
