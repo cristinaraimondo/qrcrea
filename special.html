@@ -643,24 +643,22 @@ document.getElementById("downloadCardVideo")
   .addEventListener("click", descargarTarjetaVideo);
   const SERVIDOR_VIDEO = "https://qrcrea.onrender.com/generar-video";
 
+
 async function descargarTarjetaVideo() {
   const boton = document.getElementById("downloadCardVideo");
   const tarjeta = document.getElementById("specialCard");
   const musica = document.getElementById("specialMusic");
 
-  boton.disabled = true;
-  boton.textContent = "🎬 Preparando video...";
+  if (!boton || !tarjeta || !musica?.src) {
+    alert("No se encontró la tarjeta o su música.");
+    return;
+  }
 
-  let contextoAudio;
-  let stream;
-  let grabador;
+  boton.disabled = true;
+  boton.textContent = "🎬 Preparando tarjeta...";
 
   try {
-    if (!window.MediaRecorder || !HTMLCanvasElement.prototype.captureStream) {
-      throw new Error("Este navegador no permite grabar videos.");
-    }
-
-    // Capturar tarjeta sin reproductor ni botón
+    // Capturar la tarjeta sin los controles
     const captura = await html2canvas(tarjeta, {
       backgroundColor: "#ffffff",
       scale: 2,
@@ -669,248 +667,56 @@ async function descargarTarjetaVideo() {
         elemento.id === "musicBox" ||
         elemento.id === "downloadCardVideo"
     });
-    const respuesta = await fetch(SERVIDOR_VIDEO, {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify({
-    imagen: captura.toDataURL("image/png"),
-    musica: musica.src
-  })
-});
 
-if (!respuesta.ok) {
-  const error = await respuesta.json();
-  throw new Error(error.error || "No se pudo generar el MP4");
-}
+    boton.textContent = "🎬 Generando MP4...";
 
-const videoMP4 = await respuesta.blob();
-const urlMP4 = URL.createObjectURL(videoMP4);
-
-const enlaceMP4 = document.createElement("a");
-enlaceMP4.href = urlMP4;
-enlaceMP4.download = "tarjeta-qrcrea.mp4";
-document.body.appendChild(enlaceMP4);
-enlaceMP4.click();
-enlaceMP4.remove();
-
-setTimeout(() => URL.revokeObjectURL(urlMP4), 60000);
-
-boton.textContent = "🎬 Descargar tarjeta con música";
-boton.disabled = false;
-return;
-    // Descargar imagen de la tarjeta para generar el MP4
-const enlaceImagen = document.createElement("a");
-enlaceImagen.download = "tarjeta-qrcrea.png";
-enlaceImagen.href = captura.toDataURL("image/png");
-enlaceImagen.click();
-
-    const canvas = document.createElement("canvas");
-    canvas.width = 1080;
-    canvas.height = 1920;
-
-    const ctx = canvas.getContext("2d");
-
-    // Preparar confeti animado
-    const colores = [
-      "#ff4d8d",
-      "#635bff",
-      "#ffd54a",
-      "#36cfc9",
-      "#ff8a3d"
-    ];
-
-    const confetis = Array.from({ length: 65 }, () => ({
-      x: Math.random() * 1080,
-      y: Math.random() * 1920,
-      velocidad: 1 + Math.random() * 3,
-      tamaño: 5 + Math.random() * 9,
-      color: colores[Math.floor(Math.random() * colores.length)]
-    }));
-
-    // Preparar audio
-    contextoAudio = new AudioContext();
-
-    
-
-   const fuente = contextoAudio.createMediaElementSource(musica);
-const destino = contextoAudio.createMediaStreamDestination();
-
-    fuente.connect(destino);
-   
-
-    await contextoAudio.resume();
-
-    // Preparar video
-    stream = canvas.captureStream(30);
-
-    destino.stream.getAudioTracks().forEach(track => {
-      stream.addTrack(track);
-    });
-
-    const formato = [
-      "video/webm;codecs=vp8,opus",
-      "video/webm"
-    ].find(tipo => MediaRecorder.isTypeSupported(tipo));
-
-    if (!formato) {
-      throw new Error("El navegador no admite grabación WebM.");
-    }
-
-    grabador = new MediaRecorder(stream, {
-      mimeType: formato
-    });
-
-    const fragmentos = [];
-
-    grabador.ondataavailable = evento => {
-      if (evento.data.size > 0) {
-        fragmentos.push(evento.data);
+    // Enviar tarjeta y música al servidor
+    const respuesta = await fetch(
+      "https://qrcrea.onrender.com/generar-video",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          imagen: captura.toDataURL("image/png"),
+          musica: musica.src
+        })
       }
-    };
+    );
 
-    // Dibujar cada fotograma
-    let animando = true;
+    if (!respuesta.ok) {
+      let mensaje = "No se pudo generar el MP4";
 
-    function dibujar() {
-      if (!animando) return;
+      try {
+        const error = await respuesta.json();
+        mensaje = error.error || mensaje;
+      } catch {}
 
-      ctx.clearRect(0, 0, 1080, 1920);
-
-      // Fondo blanco
-      ctx.fillStyle = "#ffffff";
-      ctx.fillRect(0, 0, 1080, 1920);
-
-      // Tarjeta manteniendo proporciones
-      const escala = Math.min(
-        1080 / captura.width,
-        1920 / captura.height
-      );
-
-      const ancho = captura.width * escala;
-      const alto = captura.height * escala;
-
-      ctx.drawImage(
-        captura,
-        (1080 - ancho) / 2,
-        (1920 - alto) / 2,
-        ancho,
-        alto
-      );
-
-      // Confeti animado
-      // Confeti animado con balanceo y rotación
-confetis.forEach(c => {
-
-  c.y += c.velocidad * 2;
-
-  // Movimiento ondulante de lado a lado
-  const movimientoX =
-    Math.sin(performance.now() * 0.002 + c.x) * 65;
-
-  // Rotación continua
-  const angulo =
-    performance.now() * 0.0015 * c.velocidad;
-
-  ctx.save();
-
-  ctx.translate(c.x + movimientoX, c.y);
-  ctx.rotate(angulo);
-
-  ctx.fillStyle = c.color;
-
-  ctx.fillRect(
-    -c.tamaño / 2,
-    -c.tamaño * 0.8,
-    c.tamaño,
-    c.tamaño * 1.6
-  );
-
-  ctx.restore();
-
-  // Reaparece arriba al salir de pantalla
-  if (c.y > 1920) {
-    c.y = -20;
-    c.x = Math.random() * 1080;
-  }
-
-});
-
-      requestAnimationFrame(dibujar);
+      throw new Error(mensaje);
     }
 
-    dibujar();
+    // Descargar MP4
+    const archivo = await respuesta.blob();
 
-    boton.textContent = "🎬 Grabando tarjeta...";
-
-    musica.pause();
-    musica.currentTime = 0;
-
-    // Esperar que la música tenga duración conocida
-    if (!Number.isFinite(musica.duration)) {
-      await new Promise((resolve, reject) => {
-        musica.addEventListener("loadedmetadata", resolve, { once: true });
-        musica.addEventListener("error", reject, { once: true });
-      });
+    if (!archivo.size) {
+      throw new Error("El servidor devolvió un archivo vacío.");
     }
-
-    const duracion = musica.duration;
-
-    if (!Number.isFinite(duracion) || duracion <= 0) {
-      throw new Error("No se pudo determinar la duración de la música.");
-    }
-
-    // Grabar hasta que termine la canción
-    const finalizacion = new Promise((resolve, reject) => {
-      grabador.onstop = resolve;
-      grabador.onerror = reject;
-    });
-
-    grabador.start(1000);
-    console.log(
-  "Pistas de audio:",
-  stream.getAudioTracks().length
-);
-    await musica.play();
-
-    await new Promise(resolve => {
-      const verificar = setInterval(() => {
-        if (
-          musica.ended ||
-          musica.currentTime >= duracion - 0.1
-        ) {
-          clearInterval(verificar);
-          resolve();
-        }
-      }, 200);
-    });
-
-    animando = false;
-    grabador.stop();
-
-    await finalizacion;
-
-    const archivo = new Blob(fragmentos, {
-      type: formato
-    });
 
     const url = URL.createObjectURL(archivo);
-
     const enlace = document.createElement("a");
+
     enlace.href = url;
-    enlace.download = "tarjeta-qrcrea.webm";
+    enlace.download = "tarjeta-qrcrea.mp4";
 
     document.body.appendChild(enlace);
     enlace.click();
     enlace.remove();
 
-    setTimeout(() => URL.revokeObjectURL(url), 5000);
-
-    alert("¡Video descargado correctamente!");
+    setTimeout(() => URL.revokeObjectURL(url), 60000);
 
   } catch (error) {
-    console.error("Error generando video:", error);
+    console.error("Error generando MP4:", error);
     alert("No se pudo generar el video: " + error.message);
 
   } finally {
@@ -918,6 +724,7 @@ confetis.forEach(c => {
     boton.textContent = "🎬 Descargar tarjeta con música";
   }
 }
+
 cargarTarjetaEspecial();
 
 
