@@ -699,7 +699,7 @@ async function descargarTarjetaVideo() {
 const destino = contextoAudio.createMediaStreamDestination();
 
     fuente.connect(destino);
-    fuente.connect(contextoAudio.destination);
+   
 
     await contextoAudio.resume();
 
@@ -761,17 +761,42 @@ const destino = contextoAudio.createMediaStreamDestination();
       );
 
       // Confeti animado
-      confetis.forEach(c => {
-        ctx.fillStyle = c.color;
-        ctx.fillRect(c.x, c.y, c.tamaño, c.tamaño * 1.6);
+      // Confeti animado con balanceo y rotación
+confetis.forEach(c => {
 
-        c.y += c.velocidad * 2;
+  c.y += c.velocidad * 2;
 
-        if (c.y > 1920) {
-          c.y = -20;
-          c.x = Math.random() * 1080;
-        }
-      });
+  // Movimiento ondulante de lado a lado
+  const movimientoX =
+    Math.sin(performance.now() * 0.002 + c.x) * 65;
+
+  // Rotación continua
+  const angulo =
+    performance.now() * 0.0015 * c.velocidad;
+
+  ctx.save();
+
+  ctx.translate(c.x + movimientoX, c.y);
+  ctx.rotate(angulo);
+
+  ctx.fillStyle = c.color;
+
+  ctx.fillRect(
+    -c.tamaño / 2,
+    -c.tamaño * 0.8,
+    c.tamaño,
+    c.tamaño * 1.6
+  );
+
+  ctx.restore();
+
+  // Reaparece arriba al salir de pantalla
+  if (c.y > 1920) {
+    c.y = -20;
+    c.x = Math.random() * 1080;
+  }
+
+});
 
       requestAnimationFrame(dibujar);
     }
@@ -791,7 +816,7 @@ const destino = contextoAudio.createMediaStreamDestination();
       });
     }
 
-    const duracion = musica.duration;
+    const duracion = 10;
 
     if (!Number.isFinite(duracion) || duracion <= 0) {
       throw new Error("No se pudo determinar la duración de la música.");
