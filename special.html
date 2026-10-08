@@ -692,14 +692,10 @@ async function descargarTarjetaVideo() {
     // Preparar audio
     contextoAudio = new AudioContext();
 
-    // Reutilizar la fuente si ya se creó
-    if (!window.fuenteMusicaQR) {
-      window.fuenteMusicaQR =
-        contextoAudio.createMediaElementSource(musica);
-    }
+    
 
-    const fuente = window.fuenteMusicaQR;
-    const destino = contextoAudio.createMediaStreamDestination();
+   const fuente = contextoAudio.createMediaElementSource(musica);
+const destino = contextoAudio.createMediaStreamDestination();
 
     fuente.connect(destino);
     fuente.connect(contextoAudio.destination);
