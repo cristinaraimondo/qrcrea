@@ -816,7 +816,7 @@ confetis.forEach(c => {
       });
     }
 
-    const duracion = 10;
+    const duracion = musica.duration;
 
     if (!Number.isFinite(duracion) || duracion <= 0) {
       throw new Error("No se pudo determinar la duración de la música.");
