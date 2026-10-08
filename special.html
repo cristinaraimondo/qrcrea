@@ -641,98 +641,218 @@ document.getElementById("downloadCardVideo")
 
 async function descargarTarjetaVideo() {
   const boton = document.getElementById("downloadCardVideo");
+  const tarjeta = document.getElementById("specialCard");
+  const musica = document.getElementById("specialMusic");
 
   boton.disabled = true;
   boton.textContent = "🎬 Preparando video...";
 
+  let contextoAudio;
+  let stream;
+  let grabador;
+
   try {
-    const tarjeta = document.getElementById("specialCard");
+    if (!window.MediaRecorder || !HTMLCanvasElement.prototype.captureStream) {
+      throw new Error("Este navegador no permite grabar videos.");
+    }
 
+    // Capturar tarjeta sin reproductor ni botón
     const captura = await html2canvas(tarjeta, {
-      backgroundColor: null,
+      backgroundColor: "#ffffff",
       scale: 2,
-      useCORS: true
+      useCORS: true,
+      ignoreElements: elemento =>
+        elemento.id === "musicBox" ||
+        elemento.id === "downloadCardVideo"
     });
-    const canvasVideo = document.createElement("canvas");
-canvasVideo.width = 1080;
-canvasVideo.height = 1920;
 
-const ctx = canvasVideo.getContext("2d");
+    const canvas = document.createElement("canvas");
+    canvas.width = 1080;
+    canvas.height = 1920;
 
-ctx.drawImage(
-  captura,
-  0,
-  0,
-  canvasVideo.width,
-  canvasVideo.height
-);
+    const ctx = canvas.getContext("2d");
 
-const streamVideo = canvasVideo.captureStream(30);
+    // Preparar confeti animado
+    const colores = [
+      "#ff4d8d",
+      "#635bff",
+      "#ffd54a",
+      "#36cfc9",
+      "#ff8a3d"
+    ];
 
-console.log("Grabación preparada:", streamVideo.active);
+    const confetis = Array.from({ length: 65 }, () => ({
+      x: Math.random() * 1080,
+      y: Math.random() * 1920,
+      velocidad: 1 + Math.random() * 3,
+      tamaño: 5 + Math.random() * 9,
+      color: colores[Math.floor(Math.random() * colores.length)]
+    }));
 
+    // Preparar audio
+    contextoAudio = new AudioContext();
 
-const fragmentos = [];
+    // Reutilizar la fuente si ya se creó
+    if (!window.fuenteMusicaQR) {
+      window.fuenteMusicaQR =
+        contextoAudio.createMediaElementSource(musica);
+    }
 
-grabador.ondataavailable = (evento) => {
-  if (evento.data.size > 0) {
-    fragmentos.push(evento.data);
-  }
-};
+    const fuente = window.fuenteMusicaQR;
+    const destino = contextoAudio.createMediaStreamDestination();
 
-grabador.onstop = () => {
-  const video = new Blob(fragmentos, {
-    type: "video/webm"
-  });
+    fuente.connect(destino);
+    fuente.connect(contextoAudio.destination);
 
-  const url = URL.createObjectURL(video);
-  const enlace = document.createElement("a");
+    await contextoAudio.resume();
 
-  enlace.href = url;
-  enlace.download = "tarjeta-qrcrea.webm";
-  enlace.click();
+    // Preparar video
+    stream = canvas.captureStream(30);
 
-  setTimeout(() => URL.revokeObjectURL(url), 1000);
-};
-const musica = document.getElementById("specialMusic");
+    destino.stream.getAudioTracks().forEach(track => {
+      stream.addTrack(track);
+    });
 
-const contextoAudio = new AudioContext();
-const fuenteAudio = contextoAudio.createMediaElementSource(musica);
-const destinoAudio = contextoAudio.createMediaStreamDestination();
+    const formato = [
+      "video/webm;codecs=vp8,opus",
+      "video/webm"
+    ].find(tipo => MediaRecorder.isTypeSupported(tipo));
 
-fuenteAudio.connect(destinoAudio);
-fuenteAudio.connect(contextoAudio.destination);
+    if (!formato) {
+      throw new Error("El navegador no admite grabación WebM.");
+    }
 
-destinoAudio.stream.getAudioTracks().forEach(track => {
-  streamVideo.addTrack(track);
-});
+    grabador = new MediaRecorder(stream, {
+      mimeType: formato
+    });
 
-await contextoAudio.resume();
-musica.currentTime = 0;
-const grabador = new MediaRecorder(streamVideo, {
-  mimeType: "video/webm"
-});
+    const fragmentos = [];
 
-grabador.start();
+    grabador.ondataavailable = evento => {
+      if (evento.data.size > 0) {
+        fragmentos.push(evento.data);
+      }
+    };
 
-await musica.play();
+    // Dibujar cada fotograma
+    let animando = true;
 
-await new Promise(resolve => setTimeout(resolve, 5000));
+    function dibujar() {
+      if (!animando) return;
 
-grabador.stop();
+      ctx.clearRect(0, 0, 1080, 1920);
 
-    console.log("Tarjeta capturada:", captura.width, captura.height);
-   
+      // Fondo blanco
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(0, 0, 1080, 1920);
+
+      // Tarjeta manteniendo proporciones
+      const escala = Math.min(
+        1080 / captura.width,
+        1920 / captura.height
+      );
+
+      const ancho = captura.width * escala;
+      const alto = captura.height * escala;
+
+      ctx.drawImage(
+        captura,
+        (1080 - ancho) / 2,
+        (1920 - alto) / 2,
+        ancho,
+        alto
+      );
+
+      // Confeti animado
+      confetis.forEach(c => {
+        ctx.fillStyle = c.color;
+        ctx.fillRect(c.x, c.y, c.tamaño, c.tamaño * 1.6);
+
+        c.y += c.velocidad * 2;
+
+        if (c.y > 1920) {
+          c.y = -20;
+          c.x = Math.random() * 1080;
+        }
+      });
+
+      requestAnimationFrame(dibujar);
+    }
+
+    dibujar();
+
+    boton.textContent = "🎬 Grabando tarjeta...";
+
+    musica.pause();
+    musica.currentTime = 0;
+
+    // Esperar que la música tenga duración conocida
+    if (!Number.isFinite(musica.duration)) {
+      await new Promise((resolve, reject) => {
+        musica.addEventListener("loadedmetadata", resolve, { once: true });
+        musica.addEventListener("error", reject, { once: true });
+      });
+    }
+
+    const duracion = musica.duration;
+
+    if (!Number.isFinite(duracion) || duracion <= 0) {
+      throw new Error("No se pudo determinar la duración de la música.");
+    }
+
+    // Grabar hasta que termine la canción
+    const finalizacion = new Promise((resolve, reject) => {
+      grabador.onstop = resolve;
+      grabador.onerror = reject;
+    });
+
+    grabador.start(1000);
+    await musica.play();
+
+    await new Promise(resolve => {
+      const verificar = setInterval(() => {
+        if (
+          musica.ended ||
+          musica.currentTime >= duracion - 0.1
+        ) {
+          clearInterval(verificar);
+          resolve();
+        }
+      }, 200);
+    });
+
+    animando = false;
+    grabador.stop();
+
+    await finalizacion;
+
+    const archivo = new Blob(fragmentos, {
+      type: formato
+    });
+
+    const url = URL.createObjectURL(archivo);
+
+    const enlace = document.createElement("a");
+    enlace.href = url;
+    enlace.download = "tarjeta-qrcrea.webm";
+
+    document.body.appendChild(enlace);
+    enlace.click();
+    enlace.remove();
+
+    setTimeout(() => URL.revokeObjectURL(url), 5000);
+
+    alert("¡Video descargado correctamente!");
 
   } catch (error) {
-    console.error("Error preparando el video:", error);
-    alert("No se pudo capturar la tarjeta.");
+    console.error("Error generando video:", error);
+    alert("No se pudo generar el video: " + error.message);
+
   } finally {
     boton.disabled = false;
     boton.textContent = "🎬 Descargar tarjeta con música";
   }
 }
-
 cargarTarjetaEspecial();
 
 
