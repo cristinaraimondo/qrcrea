@@ -371,6 +371,25 @@
       <div id="musicBox" class="musicBox">
         <audio id="specialMusic" controls></audio>
       </div>
+      <button
+  id="downloadCardVideo"
+  type="button"
+  style="
+    display: none;
+    width: 100%;
+    margin-top: 18px;
+    padding: 15px;
+    background: #635bff;
+    color: white;
+    border: none;
+    border-radius: 14px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+  "
+>
+  🎬 Descargar tarjeta con música
+</button>
 
     </div>
 
@@ -601,10 +620,12 @@ if (template === "invitation") {
     const musicBox =
       document.getElementById("musicBox");
 
-    if (data.music_url) {
-      music.src = data.music_url;
-      musicBox.style.display = "block";
-    }
+   if (data.music_url) {
+  music.src = data.music_url;
+  musicBox.style.display = "block";
+
+  document.getElementById("downloadCardVideo").style.display = "block";
+}
 
   }
 
