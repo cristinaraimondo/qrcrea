@@ -803,6 +803,10 @@ const destino = contextoAudio.createMediaStreamDestination();
     });
 
     grabador.start(1000);
+    console.log(
+  "Pistas de audio:",
+  stream.getAudioTracks().length
+);
     await musica.play();
 
     await new Promise(resolve => {
