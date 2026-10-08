@@ -1,0 +1,6 @@
+node_modules/
+*.mp4
+*.mp3
+*.png
+.env
+probar-video.ps1
