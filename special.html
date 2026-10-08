@@ -653,9 +653,58 @@ async function descargarTarjetaVideo() {
       scale: 2,
       useCORS: true
     });
+    const canvasVideo = document.createElement("canvas");
+canvasVideo.width = 1080;
+canvasVideo.height = 1920;
+
+const ctx = canvasVideo.getContext("2d");
+
+ctx.drawImage(
+  captura,
+  0,
+  0,
+  canvasVideo.width,
+  canvasVideo.height
+);
+
+const streamVideo = canvasVideo.captureStream(30);
+
+console.log("Grabación preparada:", streamVideo.active);
+const grabador = new MediaRecorder(streamVideo, {
+  mimeType: "video/webm"
+});
+
+const fragmentos = [];
+
+grabador.ondataavailable = (evento) => {
+  if (evento.data.size > 0) {
+    fragmentos.push(evento.data);
+  }
+};
+
+grabador.onstop = () => {
+  const video = new Blob(fragmentos, {
+    type: "video/webm"
+  });
+
+  const url = URL.createObjectURL(video);
+  const enlace = document.createElement("a");
+
+  enlace.href = url;
+  enlace.download = "tarjeta-qrcrea.webm";
+  enlace.click();
+
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+};
+
+grabador.start();
+
+await new Promise(resolve => setTimeout(resolve, 5000));
+
+grabador.stop();
 
     console.log("Tarjeta capturada:", captura.width, captura.height);
-    alert("La captura de la tarjeta se realizó correctamente.");
+   
 
   } catch (error) {
     console.error("Error preparando el video:", error);
