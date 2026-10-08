@@ -696,8 +696,24 @@ grabador.onstop = () => {
 
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 };
+const musica = document.getElementById("specialMusic");
+
+const contextoAudio = new AudioContext();
+const fuenteAudio = contextoAudio.createMediaElementSource(musica);
+const destinoAudio = contextoAudio.createMediaStreamDestination();
+
+fuenteAudio.connect(destinoAudio);
+fuenteAudio.connect(contextoAudio.destination);
+
+destinoAudio.stream.getAudioTracks().forEach(track => {
+  streamVideo.addTrack(track);
+});
+
+await contextoAudio.resume();
+musica.currentTime = 0;
 
 grabador.start();
+await musica.play();
 
 await new Promise(resolve => setTimeout(resolve, 5000));
 
