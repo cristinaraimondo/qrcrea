@@ -4,8 +4,9 @@ const fs = require("node:fs");
 const path = require("node:path");
 const os = require("node:os");
 const dns = require("node:dns").promises;
-
-const ffmpegPath = require("ffmpeg-static");
+const ffmpegPath = process.env.RENDER
+  ? "ffmpeg"
+  : require("ffmpeg-static");
 const express = require("express");
 const cors = require("cors");
 const { rateLimit } = require("express-rate-limit");
