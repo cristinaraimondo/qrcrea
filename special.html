@@ -621,8 +621,9 @@ if (template === "invitation") {
       document.getElementById("musicBox");
 
    if (data.music_url) {
-  music.src = data.music_url;
-  musicBox.style.display = "block";
+    music.crossOrigin = "anonymous";
+    music.src = data.music_url;
+    musicBox.style.display = "block";
 
   document.getElementById("downloadCardVideo").style.display = "block";
 }
