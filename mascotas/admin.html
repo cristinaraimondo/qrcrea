@@ -1,4 +1,4 @@
-<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Panel municipal | QR Mascotas</title><style>body{font:16px system-ui;background:#f5f3fb;color:#272038;margin:0}.wrap{max-width:850px;margin:25px auto;padding:16px}.card{background:white;border-radius:18px;padding:24px;margin-bottom:18px}h1{color:#6534a4}label{display:block;margin:12px 0 5px;font-weight:600}input,select,button{font:inherit;width:100%;padding:11px;border:1px solid #c9c1d8;border-radius:9px;box-sizing:border-box}button{background:#6534a4;color:white;cursor:pointer;margin-top:15px}.hidden{display:none}.item{border-top:1px solid #ddd;padding:12px 0}.muted{color:#686175}a{color:#6534a4}</style></head><body><main class="wrap"><div class="card"><a href="./">← QR Mascotas</a><h1>Panel municipal</h1><p>Solo operadores autorizados pueden cargar y editar registros.</p><div id="login"><label>Correo</label><input id="email" type="email"><label>Contraseña</label><input id="password" type="password"><button id="enter">Ingresar</button></div><div id="app" class="hidden"><button id="exit">Cerrar sesión</button><h2>Registrar perro</h2><form id="form"><label>Nombre del perro</label><input id="nombre" maxlength="100" required><label>Fotografía actual (JPG, PNG o WebP, máximo 2 MB)</label><input id="foto" type="file" accept="image/jpeg,image/png,image/webp"><label>Nombre del responsable (uso interno)</label><input id="responsable" maxlength="120"><label><input id="consent" type="checkbox" style="width:auto"> Autorizó publicar el nombre del responsable</label><label>Vacuna antirrábica</label><select id="vacuna"><option value="sin_datos">Sin información</option><option value="vigente">Vigente</option><option value="vencida">Vencida</option></select><label>Castración</label><select id="castrado"><option value="sin_datos">Sin información</option><option value="si">Sí</option><option value="no">No</option></select><label>Situación</label><select id="situacion"><option value="sin_datos">Sin información</option><option value="con_dueno">Con responsable</option><option value="sin_responsable">Sin responsable identificado</option><option value="extraviado">Extraviado</option></select><label>Fecha del relevamiento</label><input id="fecha" type="date" required><button id="save" type="submit">Guardar ficha</button></form><section id="qrPanel" class="card hidden"><h2>Medalla QR lista</h2><p id="qrPet"></p><div id="qrPreview"></div><p><a id="qrLink" target="_blank" rel="noopener">Abrir ficha pública</a></p><button id="pngBtn" type="button">Descargar QR PNG</button><button id="svgBtn" type="button">Descargar QR SVG para LightBurn</button><p class="muted">El código identifica la ficha, no contiene datos privados. Probalo escaneándolo antes de grabar.</p></section><h2>Registros</h2><div id="list"></div></div><p id="msg" role="status"></p></div></main><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.0/dist/umd/supabase.min.js"></script><script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script><script>
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Panel municipal | QR Mascotas</title><style>body{font:16px system-ui;background:#f5f3fb;color:#272038;margin:0}.wrap{max-width:850px;margin:25px auto;padding:16px}.card{background:white;border-radius:18px;padding:24px;margin-bottom:18px}h1{color:#6534a4}label{display:block;margin:12px 0 5px;font-weight:600}input,select,button{font:inherit;width:100%;padding:11px;border:1px solid #c9c1d8;border-radius:9px;box-sizing:border-box}button{background:#6534a4;color:white;cursor:pointer;margin-top:15px}.hidden{display:none}.item{border-top:1px solid #ddd;padding:12px 0}.muted{color:#686175}a{color:#6534a4}</style></head><body><main class="wrap"><div class="card"><a href="./">← QR Mascotas</a><h1>Panel municipal</h1><p>Solo operadores autorizados pueden cargar y editar registros.</p><div id="login"><label>Correo</label><input id="email" type="email"><label>Contraseña</label><input id="password" type="password"><button id="enter">Ingresar</button></div><div id="app" class="hidden"><button id="exit">Cerrar sesión</button><h2>Registrar perro</h2><form id="form"><label>Nombre del perro</label><input id="nombre" maxlength="100" required><label>Fotografía actual (JPG, PNG o WebP, máximo 2 MB)</label><input id="foto" type="file" accept="image/jpeg,image/png,image/webp"><label>Nombre del responsable (uso interno)</label><input id="responsable" maxlength="120"><label><input id="consent" type="checkbox" style="width:auto"> Autorizó publicar el nombre del responsable</label><label>Vacuna antirrábica</label><select id="vacuna"><option value="sin_datos">Sin información</option><option value="vigente">Vigente</option><option value="vencida">Vencida</option></select><label>Castración</label><select id="castrado"><option value="sin_datos">Sin información</option><option value="si">Sí</option><option value="no">No</option></select><label>Situación</label><select id="situacion"><option value="sin_datos">Sin información</option><option value="con_dueno">Con responsable</option><option value="sin_responsable">Sin responsable identificado</option><option value="extraviado">Extraviado</option></select><label>Fecha del relevamiento</label><input id="fecha" type="date" required><button id="save" type="submit">Guardar ficha</button></form><section id="qrPanel" class="card hidden"><h2>Medalla QR lista</h2><p id="qrPet"></p><div id="qrPreview"></div><p><a id="qrLink" target="_blank" rel="noopener">Abrir ficha pública</a></p><button id="pngBtn" type="button">Descargar QR PNG</button><button id="svgBtn" type="button">Descargar QR SVG para LightBurn</button><p class="muted">El código identifica la ficha, no contiene datos privados. Probalo escaneándolo antes de grabar.</p></section><h2>Registros</h2><div id="list"></div></div><p id="msg" role="status"></p></div></main><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.0/dist/umd/supabase.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script><script>
 const db=supabase.createClient('https://srottoudvavudcujvzeb.supabase.co','sb_publishable_wpYSqgBPatf4EZa2AsKLpA_He28PET4'),$=id=>document.getElementById(id);let operator=false;
 $('fecha').value=new Date().toISOString().slice(0,10);
 function msg(s){$('msg').textContent=s}
@@ -10,16 +10,54 @@ const owner=$('responsable').value.trim();const {error}=await db.from('mascotas_
 let currentQR=null;
 function showQR(id,name){
  const url=new URL('./?id='+encodeURIComponent(id),location.href).href;
- if(typeof qrcode!=='function'){msg('No se pudo cargar el generador QR. Revisá tu conexión.');return}
- const qr=qrcode(0,'M');qr.addData(url);qr.make();currentQR={qr,id,name};
- $('qrPanel').classList.remove('hidden');$('qrPet').textContent='QR de '+name;
- $('qrPreview').innerHTML=qr.createSvgTag(6,4);
+ $('qrPanel').classList.remove('hidden');
+ $('qrPet').textContent='QR de '+name;
  $('qrLink').href=url;$('qrLink').textContent=url;
- $('qrPanel').scrollIntoView({behavior:'smooth',block:'start'});
+ $('qrPreview').replaceChildren();
+ currentQR={id,name,url};
+ if(typeof QRCode!=='function'){
+   msg('No se pudo cargar la biblioteca QR. Probá actualizar con Ctrl+F5 y revisá la conexión.');
+   $('pngBtn').disabled=true;$('svgBtn').disabled=true;return;
+ }
+ try{
+   new QRCode($('qrPreview'),{text:url,width:320,height:320,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M});
+   $('pngBtn').disabled=false;$('svgBtn').disabled=false;
+   msg('QR generado para '+name+'. Podés descargarlo en PNG o SVG.');
+   $('qrPanel').scrollIntoView({behavior:'smooth',block:'start'});
+ }catch(e){msg('Error generando QR: '+e.message)}
 }
-function download(content,type,filename){const url=URL.createObjectURL(new Blob([content],{type}));const a=document.createElement('a');a.href=url;a.download=filename;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)}
-$('svgBtn').onclick=()=>{if(!currentQR)return;const svg=currentQR.qr.createSvgTag(10,4);download(svg,'image/svg+xml','mascota-'+currentQR.id+'.svg')};
-$('pngBtn').onclick=()=>{if(!currentQR)return;const svg=currentQR.qr.createSvgTag(10,4);const img=new Image();const blob=new Blob([svg],{type:'image/svg+xml'}),url=URL.createObjectURL(blob);img.onload=()=>{const canvas=document.createElement('canvas');canvas.width=canvas.height=1024;const ctx=canvas.getContext('2d');ctx.fillStyle='#fff';ctx.fillRect(0,0,1024,1024);ctx.drawImage(img,0,0,1024,1024);URL.revokeObjectURL(url);canvas.toBlob(b=>{if(b)download([b],'image/png','mascota-'+currentQR.id+'.png')},'image/png')};img.onerror=()=>{URL.revokeObjectURL(url);msg('No se pudo generar el PNG')};img.src=url};
+function download(blob,filename){
+ const url=URL.createObjectURL(blob),a=document.createElement('a');
+ a.href=url;a.download=filename;document.body.append(a);a.click();a.remove();
+ setTimeout(()=>URL.revokeObjectURL(url),2000);
+}
+function qrCanvas(){
+ const canvas=$('qrPreview').querySelector('canvas');
+ if(!canvas)throw Error('No se encontró el QR. Volvé a tocar Ver y descargar QR.');
+ return canvas;
+}
+$('pngBtn').onclick=()=>{
+ try{const c=qrCanvas();c.toBlob(b=>{if(b)download(b,'mascota-'+currentQR.id+'.png');else msg('No se pudo exportar el PNG')},'image/png')}
+ catch(e){msg(e.message)}
+};
+$('svgBtn').onclick=()=>{
+ try{
+  const c=qrCanvas(),ctx=c.getContext('2d'),w=c.width,h=c.height,data=ctx.getImageData(0,0,w,h).data;
+  let paths=[];
+  for(let y=0;y<h;y++){
+   let x=0;
+   while(x<w){
+    const p=(y*w+x)*4;
+    if(data[p]<128&&data[p+1]<128&&data[p+2]<128&&data[p+3]>0){
+     const x0=x;while(x<w){const q=(y*w+x)*4;if(!(data[q]<128&&data[q+1]<128&&data[q+2]<128&&data[q+3]>0))break;x++}
+     paths.push('M'+x0+' '+y+'h'+(x-x0)+'v1H'+x0+'z');
+    }else x++;
+   }
+  }
+  const svg='<svg xmlns="http://www.w3.org/2000/svg" width="'+w+'" height="'+h+'" viewBox="0 0 '+w+' '+h+'"><rect width="100%" height="100%" fill="white"/><path d="'+paths.join('')+'" fill="black"/></svg>';
+  download(new Blob([svg],{type:'image/svg+xml'}),'mascota-'+currentQR.id+'.svg');
+ }catch(e){msg('Error exportando SVG: '+e.message)}
+};
 async function list(){const {data,error}=await db.from('mascotas_registro').select('id,nombre,fecha_relevamiento').order('creado_en',{ascending:false}).limit(100);if(error){msg(error.message);return}const container=$('list');container.replaceChildren();for(const d of data){const row=document.createElement('div');row.className='item';const a=document.createElement('a');a.href='./?id='+encodeURIComponent(d.id);a.textContent=d.nombre+' · '+d.fecha_relevamiento;a.target='_blank';row.append(a);const b=document.createElement("button");b.type="button";b.textContent="Ver y descargar QR";b.onclick=()=>showQR(d.id,d.nombre);row.append(b);container.append(row)}}
 check();
 </script></body></html>
