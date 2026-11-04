@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>QR Mascotas | QRcrea</title><style>
+:root{font-family:system-ui,Arial,sans-serif;color:#24213a;background:#f5f3fb}*{box-sizing:border-box}body{margin:0}.wrap{max-width:780px;margin:30px auto;padding:16px}.card{background:white;border-radius:20px;padding:24px;box-shadow:0 5px 24px #28204a14}h1{color:#6534a4}label{display:block;margin:14px 0 6px;font-weight:600}input,select,textarea,button{font:inherit;width:100%;padding:11px;border:1px solid #d5cde5;border-radius:10px}button{background:#6534a4;color:white;border:0;cursor:pointer;margin-top:16px}button:disabled{opacity:.5}small,.muted{color:#615b70}.hidden{display:none}img{max-width:100%;max-height:300px;border-radius:14px}.tag{background:#f0eafa;padding:12px;border-radius:12px}.error{color:#a32222}a{color:#6534a4}</style></head><body><main class="wrap"><div class="card"><p><a href="../index.html">← QRcrea</a></p><h1>🐾 QR Mascotas</h1><p class="muted">Identificación digital y relevamiento responsable de perros.</p><section id="public" class="hidden"><h2 id="dogName"></h2><img id="dogPhoto" alt="Foto del perro" class="hidden"><p id="dogOwner"></p><p id="dogVaccine"></p><p id="dogNeutered"></p><p id="dogStatus"></p><button id="foundBtn">Encontré este perro</button><form id="foundForm" class="hidden"><label for="where">¿Dónde lo encontraste o viste?</label><textarea id="where" maxlength="500" required></textarea><label for="contact">Tu teléfono (opcional)</label><input id="contact" maxlength="60"><button type="submit">Preparar aviso</button><p class="muted">El aviso se prepara para enviar por el canal oficial que habilite el municipio. No se publica automáticamente.</p></form></section><section id="intro"><h2>Registro municipal</h2><p>El registro de perros y la emisión de medallas requieren acceso autorizado del municipio. Esta es la primera interfaz pública del módulo.</p><p class="tag">Cada medalla deberá apuntar a una URL permanente como <code>qrcrea.com.ar/mascotas/?id=IDENTIFICADOR</code>. Las fichas se cargarán desde una base de datos con permisos de acceso.</p></section><p id="message" role="status"></p></div></main><p><a href="admin.html">Panel municipal</a></p><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.0/dist/umd/supabase.min.js"></script><script>
+const db=supabase.createClient('https://srottoudvavudcujvzeb.supabase.co','sb_publishable_wpYSqgBPatf4EZa2AsKLpA_He28PET4');
+const $=id=>document.getElementById(id);
+const id=new URLSearchParams(location.search).get('id');
+async function load(){
+ if(!id)return;
+ $('intro').classList.add('hidden');$('public').classList.remove('hidden');$('foundBtn').disabled=true;
+ if(!/^[0-9a-f-]{36}$/i.test(id)){$('message').textContent='Código inválido';return}
+ const {data,error}=await db.from('mascotas_registro').select('nombre,responsable_publico,vacuna_antirrabica,castrado,situacion,foto_url').eq('id',id).maybeSingle();
+ if(error||!data){$('message').textContent='No encontramos esta ficha';return}
+ $('dogName').textContent=data.nombre;
+ $('dogOwner').textContent='Responsable: '+(data.responsable_publico||'No publicado');
+ $('dogVaccine').textContent='Antirrábica: '+({vigente:'vigente',vencida:'vencida',sin_datos:'sin información'}[data.vacuna_antirrabica]);
+ $('dogNeutered').textContent='Castrado: '+({si:'sí',no:'no',sin_datos:'sin información'}[data.castrado]);
+ $('dogStatus').textContent='Situación: '+({con_dueno:'Con responsable',sin_responsable:'Sin responsable identificado',extraviado:'Extraviado',sin_datos:'Sin información'}[data.situacion]);
+ if(data.foto_url){$('dogPhoto').src=data.foto_url;$('dogPhoto').classList.remove('hidden')}
+ $('foundBtn').disabled=false;
+}
+$('foundBtn').onclick=()=>{$('foundForm').classList.toggle('hidden')};
+$('foundForm').onsubmit=e=>{e.preventDefault();$('message').textContent='El envío de avisos todavía no está habilitado. Contactá al área municipal correspondiente.'};
+load();
+</script></body></html>
