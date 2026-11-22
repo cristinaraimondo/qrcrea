@@ -477,6 +477,10 @@ let editingQrData = null;
     qrFileInput.style.display = "block";
     qrFileInput.accept = "audio/*";
   }
+  else if (selectedQrType === "video") {
+    qrFileInput.style.display = "block";
+    qrFileInput.accept = "video/mp4";
+  }
 
   // TARJETA DE PRESENTACIÓN PRO
   else if (selectedQrType === "vcard") {
@@ -508,6 +512,8 @@ qrTypeBtns.forEach((btn) => {
   qrFileInput.accept = "application/pdf";
 } else if (selectedQrType === "audio") {
   qrFileInput.accept = "audio/*";
+} else if (selectedQrType === "video") {
+  qrFileInput.accept = "video/mp4";
 }
 
     qrTypeBtns.forEach((b) => b.classList.remove("active"));
@@ -636,6 +642,10 @@ if (selectedQrType === "special") {
 }
 
 if (archivo) {
+  if (selectedQrType === "video" && (archivo.type !== "video/mp4" || archivo.size > 20 * 1024 * 1024)) {
+    alert("Seleccioná un video MP4 de hasta 20 MB.");
+    return;
+  }
   const nombreSeguro = `${Date.now()}-${archivo.name}`;
   const rutaArchivo = `${user.id}/${nombreSeguro}`;
 
@@ -655,6 +665,8 @@ if (archivo) {
     tipoQr = "image";
   } else if (archivo.type.startsWith("audio/")) {
     tipoQr = "audio";
+  } else if (archivo.type === "video/mp4") {
+    tipoQr = "video";
   } else if (archivo.type === "application/pdf") {
     tipoQr = "pdf";
   } else {
@@ -1248,6 +1260,7 @@ const tipoTexto = {
   image: "🖼 Imagen",
   pdf: "📄 PDF",
   audio: "🎵 Audio",
+  video: "🎬 Video",
   vcard: "👤 Tarjeta",
   special: "🎁 Tarjeta especial",
   file: "📁 Archivo"
@@ -1687,6 +1700,10 @@ saveEditBtn.addEventListener("click", async () => {
 const archivo = editFile.files[0];
 
 if (archivo) {
+  if (archivo.type.startsWith("video/") && (archivo.type !== "video/mp4" || archivo.size > 20 * 1024 * 1024)) {
+    alert("Seleccioná un video MP4 de hasta 20 MB.");
+    return;
+  }
   const extension = archivo.name.split(".").pop().toLowerCase();
 const nombreSeguro = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${extension}`;
   const rutaArchivo = `${user.id}/${nombreSeguro}`;
@@ -1707,6 +1724,8 @@ const nombreSeguro = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${
     nuevoTipo = "image";
   } else if (archivo.type.startsWith("audio/")) {
     nuevoTipo = "audio";
+  } else if (archivo.type === "video/mp4") {
+    nuevoTipo = "video";
   } else if (archivo.type === "application/pdf") {
     nuevoTipo = "pdf";
   } else {
